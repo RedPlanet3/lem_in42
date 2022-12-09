@@ -1,4 +1,4 @@
-/*
+/**
 		General instructions:
 +1	The executable file must be named lem-in.
 +2	You must submit a Makefile. That Makefile needs to compile the project and
@@ -44,16 +44,37 @@
 		Lx-y Lz-w Lr-o ...
 	x, z, r represents the ants’ numbers (going from 1 to number_of_ants) and y,
 	w, o represents the rooms’ names.
-
 */
 
-#include "../includes/header.h"
+#include "../includes/lem_in.h"
 
-int		main(int argc, const char **argv) {
-	for(int i = 0; i < argc; i++) {
-		write(1, argv[i], strlen(argv[i]));
+t_vars			g_vars = {
+	.ant_number = 0,
+	.ant_number_flag = 1,
+	.end_flag = 0,
+	.err_msg = NULL,
+	.start_flag = 0,
+};
+
+static int		ft_exit(void) {
+	if (g_vars.err_msg)
+		free(g_vars.err_msg);
+	return ERROR;
+}
+
+int				main(void) {
+	int			ret;
+	char		*buf;
+
+	while((ret = get_next_line(0, &buf)) > 0) {
+		write(1, buf, ft_strlen(buf));
+		if (ft_parser(buf))
+			goto exit;
 		write(1, "\n", 1);
+		free(buf);
 	}
 
-	return 0;
+	return SUCCESS;
+exit:
+	ft_exit();
 }
