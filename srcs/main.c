@@ -57,24 +57,33 @@ t_vars			g_vars = {
 };
 
 static int		ft_exit(void) {
-	if (g_vars.err_msg)
+	print_debug("ft_exit start\n");
+	if (g_vars.err_msg) {
+		write(1, g_vars.err_msg, ft_strlen(g_vars.err_msg));
+		write(1, "\n", 1);
 		free(g_vars.err_msg);
-	return ERROR;
+	}
+	
+	print_debug("ft_exit finish success\n");
+	return g_vars.end_flag;
 }
 
 int				main(void) {
 	int			ret;
 	char		*buf;
 
+	print_debug("Main start\n");
+
 	while((ret = get_next_line(0, &buf)) > 0) {
-		write(1, buf, ft_strlen(buf));
+		print_debug("Main gnl next iteration: %s\n", buf);
 		if (ft_parser(buf))
-			goto exit;
-		write(1, "\n", 1);
+			goto exit;								// Free memory for error in ft_parser
 		free(buf);
 	}
 
-	return SUCCESS;
+	print_debug("Main finish success\n");
+	return ft_exit();
 exit:
-	ft_exit();
+	print_debug("Main finish with error\n");
+	return ft_exit();
 }

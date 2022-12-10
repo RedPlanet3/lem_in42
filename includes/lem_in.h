@@ -3,14 +3,23 @@
 
 # include "../libft/libft.h"
 
+# define DEBUG
 # define SUCCESS		0
 # define ERROR		1
 # define BUFF_SIZE	1024
+
+#ifdef DEBUG
+# include <stdio.h>
+# define print_debug(a, args...) printf("name_in_box: " a, ## args)
+#else
+# define print_debug(a, args...)
+#endif
 
 enum str_type {
 	ANTS_NUMBER	= 0,
 	ROOM_START	= 1,
 	ROOM_END	= 2,
+	NEXT_STR	= 3,
 	STR_ERROR	= -1
 };
 
