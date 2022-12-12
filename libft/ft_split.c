@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eyohn <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: sergey <sergey@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/23 14:26:16 by eyohn             #+#    #+#             */
-/*   Updated: 2020/11/23 14:33:37 by eyohn            ###   ########.fr       */
+/*   Created: 2021/06/03 23:34:35 by eyohn             #+#    #+#             */
+/*   Updated: 2022/12/11 20:21:38 by sergey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_k(const char *s, char c)
+static int	ft_count(const char *s, char c)
 {
 	int		i;
 	int		k;
@@ -31,28 +31,6 @@ static int	ft_k(const char *s, char c)
 	return (k);
 }
 
-static int	ft_l(const char *s, int i, char c, int m)
-{
-	int		l;
-
-	l = 0;
-	if (m == 1)
-	{
-		while (s[i] != c && s[i++] != '\0')
-			l++;
-		return (l);
-	}
-	else
-	{
-		if (s[i] == c && s[i] != '\0')
-		{
-			while (s[i] == c)
-				i++;
-		}
-		return (i);
-	}
-}
-
 static char	**ft_free(char **p)
 {
 	int		i;
@@ -64,28 +42,30 @@ static char	**ft_free(char **p)
 	return (NULL);
 }
 
-char		**ft_split(const char *s, char c)
+char		**ft_split(const char *str, char c)
 {
-	char	**p;
-	int		a[5];
+	char	**str_1;
+	t_split	s;
 
-	ft_bzero(a, (sizeof(int) * 5));
-	if (!s)
+	ft_bzero(&s, sizeof(s));
+	if (!str)
 		return (NULL);
-	a[1] = ft_k(s, c);
-	if (!(p = ft_calloc((a[1] + 1), sizeof(char*))))
+	if (!(str_1 = ft_calloc((ft_count(str, c) + 1), sizeof(char*))))
 		return (NULL);
-	p[a[1]] = NULL;
-	while (a[3] < a[1] && s[a[0]] != '\0')
+	str_1[ft_count(str, c)] = NULL;
+	while (s.m < ft_count(str, c) && str[s.i] != '\0')
 	{
-		a[4] = 0;
-		a[0] = ft_l(s, a[0], c, 0);
-		a[2] = ft_l(s, a[0], c, 1);
-		if (!(p[a[3]] = ft_calloc(a[2] + 1, sizeof(char))))
-			return (ft_free(p));
-		while (a[4] < a[2])
-			p[a[3]][a[4]++] = s[a[0]++];
-		p[a[3]++][a[4]] = '\0';
+		s.n = 0;
+		s.l = 0;
+		while (str[s.i] == c && str[s.i] != '\0')
+			s.i++;
+		while (str[s.i + s.l] != c && str[s.i + s.l] != '\0')
+			s.l++;
+		if (!(str_1[s.m] = ft_calloc(s.l + 1, sizeof(char))))
+			return (ft_free(str_1));
+		while (s.n < s.l)
+			str_1[s.m][s.n++] = str[s.i++];
+		str_1[s.m++][s.n] = '\0';
 	}
-	return (p);
+	return (str_1);
 }

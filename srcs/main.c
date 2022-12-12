@@ -46,23 +46,43 @@
 	w, o represents the rooms’ names.
 */
 
+/**
+ * Work process
+ * 1. Add error handler for ft_atoi (if get not number)
+ */
+
 #include "../includes/lem_in.h"
 
 t_vars			g_vars = {
 	.ant_number = 0,
 	.ant_number_flag = 1,
 	.end_flag = 0,
+	.end_rooms_flag = 0,
 	.err_msg = NULL,
 	.start_flag = 0,
+	.list_room = NULL,
+	.start_room = NULL,
+	.end_room = NULL,
+	.number_of_rooms = 0
 };
 
 static int		ft_exit(void) {
 	print_debug("ft_exit start\n");
+	unsigned int	i = 0;
+
 	if (g_vars.err_msg) {
 		write(1, g_vars.err_msg, ft_strlen(g_vars.err_msg));
 		write(1, "\n", 1);
 		free(g_vars.err_msg);
 	}
+
+	while(i < g_vars.number_of_rooms){
+		free(g_vars.list_room[i]->name);
+		free(g_vars.list_room[i]);
+		i++;
+	}
+	if (g_vars.list_room)
+		free(g_vars.list_room);
 	
 	print_debug("ft_exit finish success\n");
 	return g_vars.end_flag;

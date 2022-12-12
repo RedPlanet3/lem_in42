@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eyohn <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: sergey <sergey@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 19:09:22 by eyohn             #+#    #+#             */
-/*   Updated: 2020/11/16 19:10:50 by eyohn            ###   ########.fr       */
+/*   Updated: 2022/12/11 20:19:22 by sergey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@
 # include <unistd.h>
 
 # define BUFFER_SIZE 64
+
+typedef struct	s_split
+{
+	int			i;
+	int			l;
+	int			m;
+	int			n;
+}				t_split;
 
 int		get_next_line(int fd, char **line);
 void	*ft_memset(void *s, int c, size_t n);
