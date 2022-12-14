@@ -81,7 +81,7 @@ t_vars			g_vars = {
 	.number_of_rooms = 0
 };
 
-static int		ft_exit(void) {
+static int		ft_exit(void){
 	print_debug("ft_exit start\n");
 	unsigned int	i = 0;
 
@@ -93,31 +93,38 @@ static int		ft_exit(void) {
 
 	print_debug("ft_exit start clean list rooms. room numbers = %d\n", g_vars.number_of_rooms);
 	while(i < g_vars.number_of_rooms){
+		for(unsigned int m = 0; m < g_vars.list_room[i]->number_of_conn; m++){
+			free(g_vars.list_room[i]->connections[m]);
+		}
 		free(g_vars.list_room[i]->name);
+		free(g_vars.list_room[i]->connections);
 		free(g_vars.list_room[i]);
 		i++;
 	}
+
+	for(unsigned int m = 0; m < g_vars.start_room->number_of_conn; m++)
+		free(g_vars.start_room->connections[m]);
+	free(g_vars.start_room->name);
+	free(g_vars.start_room->connections);
+	free(g_vars.start_room);
+
+	for(unsigned int m = 0; m < g_vars.end_room->number_of_conn; m++)
+		free(g_vars.end_room->connections[m]);
+	free(g_vars.end_room->name);
+	free(g_vars.end_room->connections);
+	free(g_vars.end_room);
+
 	print_debug("ft_exit start clean list rooms. i = %d\n", i);
 	if (g_vars.list_room){
 		print_debug("ft_exit start clean this list\n");
 		free(g_vars.list_room);
 	}
 
-	if(g_vars.start_room){
-		free(g_vars.start_room->name);
-		free(g_vars.start_room);
-	}
-
-	if(g_vars.end_room){
-		free(g_vars.end_room->name);
-		free(g_vars.end_room);
-	}
-	
 	print_debug("ft_exit finish success\n");
 	return g_vars.end_flag;
 }
 
-int				main(void) {
+int				main(void){
 	int			ret;
 	char		*buf;
 

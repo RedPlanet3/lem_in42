@@ -22,14 +22,14 @@ static enum str_type	ft_get_type(char *str){
 
 	temp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(temp, str);
-	// free(str);
 	free(temp);
 
 	print_debug("ft_get_type finish with ERROR\n");
+	g_vars.end_flag = -1;
 	return return_type = STR_ERROR;						// Bad str
 }
 
-static t_room			*ft_create_room(char **args) {
+static t_room			*ft_create_room(char **args){
 	print_debug("ft_create_room start.\n");
 	t_room	*room;
 
@@ -41,6 +41,8 @@ static t_room			*ft_create_room(char **args) {
 	room->name = args[0];
 	room->x = ft_atoi(args[1]);							// Errors not handle
 	room->y = ft_atoi(args[2]);							// Errors not handle
+	room->connections = NULL;
+	room->number_of_conn = 0;
 	free(args[1]);
 	free(args[2]);
 	free(args);
@@ -52,6 +54,9 @@ error:
 	free(args[0]);
 	free(args[1]);
 	free(args[2]);
+	free(args);
+	g_vars.err_msg = ft_strdup("malloc error");
+	g_vars.end_flag = -1;
 
 	print_debug("ft_create_room finish with ERROR\n");
 	return NULL;
@@ -100,6 +105,7 @@ static int				ft_get_start_room(char *str){
 error:
 	char *temp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(temp, str);
+	g_vars.end_flag = -1;
 	free(str);
 	free(temp);
 
@@ -134,6 +140,7 @@ static int				ft_get_end_room(char* str){
 error:
 	char *temp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(temp, str);
+	g_vars.end_flag = -1;
 	free(str);
 	free(temp);
 
@@ -156,8 +163,6 @@ static int				ft_put_room_to_list(t_room *next_room){
 	t_room			**temp;
 	unsigned int	i;
 	
-	// size = ft_number_of_rooms(g_vars.list_room);
-	// print_debug("ft_put_room_to_list size = %d\n", size);
 	if (g_vars.number_of_rooms == 0) {
 		g_vars.list_room = (t_room **)malloc(sizeof(t_room *));
 		if (!g_vars.list_room)
@@ -177,10 +182,6 @@ static int				ft_put_room_to_list(t_room *next_room){
 		temp[i] = g_vars.list_room[i];
 	}
 	temp[i] = next_room;
-	// for(i = 0; i < g_vars.number_of_rooms; i++){
-	// 	print_debug("ft_put_room_to_list cycle iteration i = %d\n", i);
-	// 	free(g_vars.list_room[i]);
-	// }
 	free(g_vars.list_room);
 	g_vars.number_of_rooms += 1;
 	g_vars.list_room = temp;
@@ -190,6 +191,8 @@ static int				ft_put_room_to_list(t_room *next_room){
 error:
 	print_debug("ft_put_room_to_list finish with ERROR\n");
 	g_vars.err_msg = ft_strdup("malloc error");
+	g_vars.end_flag = -1;
+
 	return ERROR;
 }
 
@@ -200,13 +203,6 @@ static int				ft_add_room(char *str){
 	t_room	*temp;
 
 	list = ft_split(str, ' ');
-
-	// while(*list){
-	// 	free(*list);
-	// 	list++;
-	// }
-	// free(str);
-	// return SUCCESS;
 
 	if (ft_get_str_number(list) != 3) {					// Str with rooms end
 		for(int i = 0; list[i]; i++)
@@ -228,6 +224,7 @@ success:
 error:
 	char *tmp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(tmp, str);
+	g_vars.end_flag = -1;
 	free(str);
 	free(tmp);
 
@@ -235,22 +232,122 @@ error:
 	return ERROR;										// Bad str
 }
 
+static t_room			*ft_get_room(char *name){
+	print_debug("ft_get_room start. str: %s\n", name);
+	t_room	*ret = NULL;
+
+	if(!ft_strcmp(g_vars.start_room->name, name)){
+		return g_vars.start_room;
+	} else if (!ft_strcmp(g_vars.end_room->name, name)){
+		return g_vars.end_room;
+	} else {
+		for(unsigned int i = 0; i < g_vars.number_of_rooms; i++){
+			if (!ft_strcmp(g_vars.list_room[i]->name, name)){
+				ret = g_vars.list_room[i];
+				break;
+			}
+		}
+	}
+
+	print_debug("ft_get_room finish success. ret - %p\n", ret);
+	return ret;
+}
+
+static int				ft_add_one_connection(t_room *curent_room, char *room_name){
+	print_debug("ft_add_one_connection start. str: %s, connection_number = %d, room_name = %s\n",
+			room_name, curent_room->number_of_conn, curent_room->name);
+	char			**conn_list = NULL;
+	unsigned int	i = 0;
+
+	if(curent_room->number_of_conn == 0){
+		if(!(curent_room->connections = (char**)malloc(sizeof(char*))))
+			goto error;
+		curent_room->connections[0] = room_name;
+		curent_room->number_of_conn += 1;
+	} else {
+		if(!(conn_list = (char**)malloc(sizeof(char*)
+			* (curent_room->number_of_conn + 1))))
+			goto error;
+		while(i < curent_room->number_of_conn){
+			conn_list[i] = curent_room->connections[i];
+			i++;
+		}
+		conn_list[i] = room_name;
+		free(curent_room->connections);
+		curent_room->connections = conn_list;
+		curent_room->number_of_conn += 1;
+	}
+
+	print_debug("ft_add_one_connection end success\n");
+	return SUCCESS;
+error:
+	free(room_name);
+	print_debug("ft_add_one_connection end with ERROR\n");
+	g_vars.err_msg = ft_strdup("malloc error");
+	g_vars.end_flag = -1;
+	return ERROR;
+}
+
 static int				ft_add_connection(char *str){
 	print_debug("ft_add_connection start. str: %s\n",
 			str);
+	char	**list;
+	t_room	*room_1;
+	t_room	*room_2;
+	char	*tmp_1;
+	char	*tmp_2;
 
 	write(1, str, ft_strlen(str));
 	write(1, "\n", 1);
 
+	list = ft_split(str, '-');
+	if(ft_get_str_number(list) != 2){
+		for(int i = 0; list[i]; i++)
+			free(list[i]);
+		free(list);
+		goto error;
+	} else {
+		tmp_1 = ft_strtrim(list[0], " \t");
+		tmp_2 = ft_strtrim(list[1], " \t");
+		if (!ft_strlen(tmp_1) || !ft_strlen(tmp_2)){
+			for(int i = 0; list[i]; i++)
+				free(list[i]);
+			free(list);
+			goto error;
+		}
+		room_1 = ft_get_room(tmp_1);
+		room_2 = ft_get_room(tmp_2);
+		if (!room_1 || !room_2){
+			for(int i = 0; list[i]; i++)
+				free(list[i]);
+			free(list);
+			free(tmp_1);
+			free(tmp_2);
+			goto error;
+		} else {
+			if (ft_add_one_connection(room_1, tmp_2) ||
+				ft_add_one_connection(room_2, tmp_1))
+				goto error;
+		}
+	}
+	for(int i = 0; list[i]; i++)
+		free(list[i]);
+	free(list);
+
 	print_debug("ft_add_connection finish success\n");
 	return SUCCESS;
 
-// error:
-// 	g_vars.err_msg = ft_strjoin(ft_strdup("Bad map: "), str);
-// 	free(str);
+error:
+	if(!g_vars.end_flag){
+		char *tmp = ft_strdup("Bad map: ");
+		g_vars.err_msg = ft_strjoin(tmp, str);
+		g_vars.end_flag = -1;
+		free(tmp);
+	}
+	// free(str);
 
-// 	print_debug("ft_add_connection finish with ERROR\n");
-// 	return ERROR;										// Bad str
+	print_debug("ft_add_room finish with ERROR\n");
+	return ERROR;										// Bad str
 }
 
 int						ft_parser(char *str){
@@ -285,8 +382,19 @@ int						ft_parser(char *str){
 	free(temp);
 
 	if (ret)
-		return ERROR;
+		goto error;
 
 	print_debug("ft_parser finish success\n");
 	return SUCCESS;
+
+error:
+	if(!g_vars.end_flag){
+		char *tmp = ft_strdup("Bad map: ");
+		g_vars.err_msg = ft_strjoin(tmp, str);
+		g_vars.end_flag = -1;
+		free(tmp);
+	}
+
+	print_debug("ft_parser finish with ERROR\n");
+	return ERROR;										// Bad str
 }
