@@ -168,7 +168,7 @@ static int				ft_put_room_to_list(t_room *next_room){
 		return SUCCESS;
 	} else {
 		temp = (t_room **)malloc(sizeof(t_room *)
-				* g_vars.number_of_rooms);
+				* (g_vars.number_of_rooms + 1));
 		if (!temp)
 			goto error;
 	}

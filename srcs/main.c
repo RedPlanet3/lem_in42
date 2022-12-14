@@ -129,6 +129,7 @@ int				main(void) {
 			goto exit;								// Free memory for error in ft_parser
 		free(buf);
 	}
+	free(buf);
 
 	print_debug("Main finish success\n");
 	return ft_exit();
