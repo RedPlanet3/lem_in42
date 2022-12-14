@@ -102,6 +102,16 @@ static int		ft_exit(void) {
 		print_debug("ft_exit start clean this list\n");
 		free(g_vars.list_room);
 	}
+
+	if(g_vars.start_room){
+		free(g_vars.start_room->name);
+		free(g_vars.start_room);
+	}
+
+	if(g_vars.end_room){
+		free(g_vars.end_room->name);
+		free(g_vars.end_room);
+	}
 	
 	print_debug("ft_exit finish success\n");
 	return g_vars.end_flag;
@@ -123,6 +133,7 @@ int				main(void) {
 	print_debug("Main finish success\n");
 	return ft_exit();
 exit:
+	free(buf);
 	print_debug("Main finish with error\n");
 	return ft_exit();
 }
