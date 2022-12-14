@@ -5,8 +5,8 @@
 
 # define DEBUG
 # define SUCCESS		0
-# define ERROR		1
-# define BUFF_SIZE	1024
+# define ERROR			1
+# define BUFF_SIZE		1024
 
 #ifdef DEBUG
 # include <stdio.h>
@@ -28,6 +28,8 @@ typedef struct 			s_room {
 	char				*name;				// Room name
 	unsigned int		x;					// X coordinate
 	unsigned int		y;					// Y coordinate
+	char				**connections;		// Names of rooms for connections
+	unsigned int		number_of_conn;		// Number of connections
 }						t_room;
 
 typedef struct 			s_vars {
