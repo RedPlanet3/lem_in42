@@ -38,6 +38,8 @@ static t_room			*ft_create_room(char **args) {
 	room->name = args[0];
 	room->x = ft_atoi(args[1]);							// Errors not handle
 	room->y = ft_atoi(args[2]);							// Errors not handle
+	free(args[1]);
+	free(args[2]);
 
 	print_debug("ft_create_room finish success\n");
 	return room;
@@ -226,10 +228,13 @@ int						ft_parser(char *str){
 	// Parser for strings in map
 	enum str_type	type;
 	int				ret;
+	char			*temp;
 
 	print_debug("ft_parser start\n");
 
-	type = ft_get_type(ft_strtrim(str, " \t\n"));		// Get type
+	temp = ft_strtrim(str, " \t\n");
+	type = ft_get_type(temp);							// Get type
+	free(temp);
 	switch (type) {
 	case ANTS_NUMBER:
 		ret = ft_get_ant_number(str);					// Get ant number
