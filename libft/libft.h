@@ -16,6 +16,7 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "../includes/lem_in.h"
 
 # define BUFFER_SIZE 64
 
@@ -63,5 +64,15 @@ int		ft_isascii(int c);
 int		ft_isprint(int c);
 int		ft_toupper(int c);
 int		ft_tolower(int c);
-
+void	ft_lst_add_back_pn(t_step **lst, t_step *new);
+void	ft_lst_del_back_pn(t_step **lst);
+void	ft_lstadd_front_pn(t_step **lst, t_step *new);
+void	ft_lstclear_pn(t_step **lst);
+void	ft_lstdelone_pn(t_step *lst);
+t_step	*ft_lstfirst_pn(t_step *lst);
+void	ft_lstiter_pn(t_step *lst, void (*f)(void *));
+t_step	*ft_lstlast_pn(t_step *lst);
+t_step	*ft_lstmap_pn(t_step *lst, void *(*f)(void *), void (*del)(void *));
+t_step	*ft_lstnew_pn(int index, char old);
+int		ft_lstsize_pn(t_step *lst);
 #endif

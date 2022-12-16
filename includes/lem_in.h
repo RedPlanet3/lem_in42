@@ -31,6 +31,7 @@ typedef struct 			s_room {
 	char				**connections;		// Names of rooms for connections
 	struct s_room		**conn_pointers;	// Connect-pointer with connect-room
 	unsigned int		number_of_conn;		// Number of connections
+	int					index;
 }						t_room;
 
 typedef struct 			s_way {
@@ -60,5 +61,15 @@ extern t_vars	g_vars;
 int				ft_create_ways_table(void);
 int				ft_parser(char *str);
 int				main(void);
+
+char **sm_matrix;
+
+typedef struct 		s_step {
+	int				room;			// room index
+	char			old_ch;			//old char in matrix
+	struct 	s_step *next;
+	struct 	s_step *prew;        	
+}					t_step;
+
 
 #endif
