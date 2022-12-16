@@ -49,8 +49,8 @@
 /**
  * Work process
  * 1. Add error handler for ft_atoi (if get not number)
- * 2. Delete rooms without connections
- * 3. Add start and finish to list
+ * +2. Delete rooms without connections
+ * +3. Add start and finish to list
  * 
  * RULES
  * А)
@@ -82,21 +82,22 @@ t_vars			g_vars = {
 	.end_room = NULL,
 	.number_of_rooms = 0,
 	.list_ways = NULL,
-	.number_of_ways = 0
+	.number_of_ways = 0,
+	.ret_value = 0
 };
 
 static int		ft_exit(void){
 	print_debug("ft_exit start\n");
-	unsigned int	i = 0;
+	unsigned int	i = 1;
 
-	if (g_vars.err_msg) {
+	if (g_vars.err_msg != NULL) {
 		write(1, g_vars.err_msg, ft_strlen(g_vars.err_msg));
 		write(1, "\n", 1);
 		free(g_vars.err_msg);
 	}
 
 	print_debug("ft_exit start clean list rooms. room numbers = %d\n", g_vars.number_of_rooms);
-	while(i < g_vars.number_of_rooms){
+	while(i < (g_vars.number_of_rooms - 1)){
 		if(g_vars.list_room[i]->number_of_conn != 0){
 			for(unsigned int m = 0; m < g_vars.list_room[i]->number_of_conn; m++){
 				free(g_vars.list_room[i]->connections[m]);
@@ -134,7 +135,7 @@ static int		ft_exit(void){
 	}
 
 	print_debug("ft_exit finish success\n");
-	return g_vars.end_flag;
+	return g_vars.ret_value;
 }
 
 int				main(void){
@@ -146,17 +147,19 @@ int				main(void){
 	while((ret = get_next_line(0, &buf)) > 0) {
 		print_debug("Main gnl next iteration: %s\n", buf);
 		if (ft_parser(buf))
-			goto exit;								// Free memory for error in ft_parser
+			goto error;								// Free memory for error in ft_parser
 		free(buf);
 	}
+	if(ft_delete_empty_rooms())
+		goto error;
 	free(buf);
 
-	// if (ft_create_ways_table())
+	// if (fend_rooms_flagt_create_ways_table())
 	// 	goto exit;
 
 	print_debug("Main finish success\n");
 	return ft_exit();
-exit:
+error:
 	free(buf);
 	print_debug("Main finish with error\n");
 	return ft_exit();

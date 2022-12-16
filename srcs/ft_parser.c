@@ -25,8 +25,52 @@ static enum str_type	ft_get_type(char *str){
 	free(temp);
 
 	print_debug("ft_get_type finish with ERROR\n");
-	g_vars.end_flag = -1;
+	g_vars.ret_value = -1;
 	return return_type = STR_ERROR;						// Bad str
+}
+
+static int				ft_put_room_to_list(t_room *next_room){
+	print_debug("ft_put_room_to_list start. number_of_rooms = %d\n", g_vars.number_of_rooms);
+	t_room			**temp;
+	unsigned int	i;
+	
+	if (g_vars.number_of_rooms == 0) {
+		g_vars.list_room = (t_room **)malloc(sizeof(t_room *));
+		if (!g_vars.list_room)
+			goto error;
+		g_vars.list_room[0] = next_room;
+		g_vars.number_of_rooms += 1;
+		print_debug("ft_put_room_to_list finish success. number_of_rooms = %d\n", g_vars.number_of_rooms);
+		return SUCCESS;
+	} else {
+		temp = (t_room **)malloc(sizeof(t_room *)
+				* (g_vars.number_of_rooms + 1));
+		if (!temp)
+			goto error;
+	}
+
+	if(next_room == g_vars.start_room){
+		temp[0] = next_room;
+		for(i = 1; i <= g_vars.number_of_rooms; i++)
+			temp[i] = g_vars.list_room[i];
+	} else {
+		for(i = 0; i < g_vars.number_of_rooms; i++)
+			temp[i] = g_vars.list_room[i];
+		temp[i] = next_room;
+	}
+
+	free(g_vars.list_room);
+	g_vars.number_of_rooms += 1;
+	g_vars.list_room = temp;
+
+	print_debug("ft_put_room_to_list finish success. number_of_rooms = %d\n", g_vars.number_of_rooms);
+	return SUCCESS;
+error:
+	print_debug("ft_put_room_to_list finish with ERROR\n");
+	g_vars.err_msg = ft_strdup("malloc error");
+	g_vars.ret_value = -1;
+
+	return ERROR;
 }
 
 static t_room			*ft_create_room(char **args){
@@ -57,7 +101,7 @@ error:
 	free(args[2]);
 	free(args);
 	g_vars.err_msg = ft_strdup("malloc error");
-	g_vars.end_flag = -1;
+	g_vars.ret_value = -1;
 
 	print_debug("ft_create_room finish with ERROR\n");
 	return NULL;
@@ -98,6 +142,9 @@ static int				ft_get_start_room(char *str){
 	if (!(g_vars.start_room = ft_create_room(list)))
 		goto error;
 
+	if(ft_put_room_to_list(g_vars.start_room))
+		goto error;
+
 	g_vars.start_flag = 2;
 
 	print_debug("ft_get_start_room finish success\n");
@@ -106,7 +153,7 @@ static int				ft_get_start_room(char *str){
 error:
 	char *temp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(temp, str);
-	g_vars.end_flag = -1;
+	g_vars.ret_value = -1;
 	free(str);
 	free(temp);
 
@@ -115,14 +162,14 @@ error:
 }
 
 static int				ft_get_end_room(char* str){
-	print_debug("ft_get_end_room start. str: %s; end_flag = %d\n",
-				str, g_vars.end_flag);
+	print_debug("ft_get_end_room start. str: %s; end_rooms_flag = %d\n",
+				str, g_vars.end_rooms_flag);
 	char	**list;
 
 	if (g_vars.end_flag == 2)							// If double end lable in map
 		goto error;
 
-	if (!g_vars.end_flag) {								// For scip end lable
+	if (g_vars.end_flag == 0) {								// For scip end lable
 		g_vars.end_flag = 1;
 		return SUCCESS;
 	}
@@ -141,7 +188,7 @@ static int				ft_get_end_room(char* str){
 error:
 	char *temp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(temp, str);
-	g_vars.end_flag = -1;
+	g_vars.ret_value = -1;
 	free(str);
 	free(temp);
 
@@ -157,44 +204,6 @@ static int				ft_get_ant_number(char *str){
 
 	print_debug("ft_get_ant_number finish success\n");
 	return SUCCESS;
-}
-
-static int				ft_put_room_to_list(t_room *next_room){
-	print_debug("ft_put_room_to_list start. number_of_rooms = %d\n", g_vars.number_of_rooms);
-	t_room			**temp;
-	unsigned int	i;
-	
-	if (g_vars.number_of_rooms == 0) {
-		g_vars.list_room = (t_room **)malloc(sizeof(t_room *));
-		if (!g_vars.list_room)
-			goto error;
-		g_vars.list_room[0] = next_room;
-		g_vars.number_of_rooms += 1;
-		print_debug("ft_put_room_to_list finish success. number_of_rooms = %d\n", g_vars.number_of_rooms);
-		return SUCCESS;
-	} else {
-		temp = (t_room **)malloc(sizeof(t_room *)
-				* (g_vars.number_of_rooms + 1));
-		if (!temp)
-			goto error;
-	}
-
-	for(i = 0; i < g_vars.number_of_rooms; i++){
-		temp[i] = g_vars.list_room[i];
-	}
-	temp[i] = next_room;
-	free(g_vars.list_room);
-	g_vars.number_of_rooms += 1;
-	g_vars.list_room = temp;
-
-	print_debug("ft_put_room_to_list finish success. number_of_rooms = %d\n", g_vars.number_of_rooms);
-	return SUCCESS;
-error:
-	print_debug("ft_put_room_to_list finish with ERROR\n");
-	g_vars.err_msg = ft_strdup("malloc error");
-	g_vars.end_flag = -1;
-
-	return ERROR;
 }
 
 static int				ft_add_room(char *str){
@@ -225,7 +234,7 @@ success:
 error:
 	char *tmp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(tmp, str);
-	g_vars.end_flag = -1;
+	g_vars.ret_value = -1;
 	free(str);
 	free(tmp);
 
@@ -254,7 +263,9 @@ static t_room			*ft_get_room(char *name){
 	return ret;
 }
 
-static int				ft_add_one_connection(t_room *curent_room, t_room *room_connect, char *room_name){
+static int				ft_add_one_connection(t_room *curent_room,
+											t_room *room_connect,
+											char *room_name){
 	print_debug("ft_add_one_connection start. str: %s, connection_number = %d, room_name = %s\n",
 			room_name, curent_room->number_of_conn, curent_room->name);
 	char			**conn_list = NULL;
@@ -294,7 +305,65 @@ error:
 	free(room_name);
 	print_debug("ft_add_one_connection end with ERROR\n");
 	g_vars.err_msg = ft_strdup("malloc error");
-	g_vars.end_flag = -1;
+	g_vars.ret_value = -1;
+	return ERROR;
+}
+
+static int				ft_remove_room_from_list(unsigned int room_index){
+	print_debug("ft_remove_room_from_list start\n");
+	t_room		**tmp_list;
+	int			m = 0;
+
+	if(!(tmp_list = (t_room**)malloc(sizeof(t_room*) * (g_vars.number_of_rooms - 1))))
+		goto error;
+
+	for(unsigned int i = 0; i < g_vars.number_of_rooms; i++){
+		if(i == room_index)
+			continue;
+		tmp_list[m] = g_vars.list_room[i];
+		m++;
+	}
+	free(g_vars.list_room[room_index]->name);
+	free(g_vars.list_room[room_index]);
+	free(g_vars.list_room);
+	g_vars.list_room = tmp_list;
+	g_vars.number_of_rooms -= 1;
+
+	print_debug("ft_remove_room_from_list finish success\n");
+	return SUCCESS;
+error:
+	print_debug("ft_remove_room_from_list finish with error\n");
+	return ERROR;
+}
+
+int						ft_delete_empty_rooms(void){
+	print_debug("ft_delete_empty_rooms start\n");
+	unsigned int	i = 0;
+
+	if(g_vars.start_room->number_of_conn == 0 ||
+		g_vars.end_room->conn_pointers == 0){
+		print_debug("ret_flag = %d\n", g_vars.ret_value);
+		if(g_vars.ret_value == 0){
+			g_vars.err_msg = ft_strdup("start or end room don't have connectoins!");
+			g_vars.ret_value = -1;
+		}
+		goto error;
+	}
+
+	while(i < g_vars.number_of_rooms){
+		print_debug("Next iteration i = %d; number_of_rooms = %d\n", i, g_vars.number_of_rooms);
+		if(g_vars.list_room[i]->number_of_conn == 0){
+			if(ft_remove_room_from_list(i))
+				goto error;
+			continue;
+		}
+		i++;
+	}
+
+	print_debug("ft_parser finish success\n");
+	return SUCCESS;
+error:
+	print_debug("ft_parser finish with error\n");
 	return ERROR;
 }
 
@@ -306,6 +375,11 @@ static int				ft_add_connection(char *str){
 	t_room	*room_2;
 	char	*tmp_1;
 	char	*tmp_2;
+
+	if((g_vars.list_room[g_vars.number_of_rooms - 1] !=
+		g_vars.end_room &&
+		ft_put_room_to_list(g_vars.end_room)))				// Add end room to end list_room
+		goto error;
 
 	list = ft_split(str, '-');
 	if(ft_get_str_number(list) != 2){
@@ -345,10 +419,10 @@ static int				ft_add_connection(char *str){
 	return SUCCESS;
 
 error:
-	if(!g_vars.end_flag){
+	if(!g_vars.ret_value){
 		char *tmp = ft_strdup("Bad map: ");
 		g_vars.err_msg = ft_strjoin(tmp, str);
-		g_vars.end_flag = -1;
+		g_vars.ret_value = -1;
 		free(tmp);
 	}
 
@@ -362,7 +436,7 @@ int						ft_parser(char *str){
 	int				ret;
 	char			*temp;
 
-	print_debug("ft_parser start\n");
+	print_debug("ft_parser start. str = %s\n", str);
 
 	temp = ft_strtrim(str, " \t\n");
 	type = ft_get_type(temp);							// Get type
@@ -394,10 +468,10 @@ int						ft_parser(char *str){
 	return SUCCESS;
 
 error:
-	if(!g_vars.end_flag){
+	if(!g_vars.ret_value){
 		char *tmp = ft_strdup("Bad map: ");
 		g_vars.err_msg = ft_strjoin(tmp, str);
-		g_vars.end_flag = -1;
+		g_vars.ret_value = -1;
 		free(tmp);
 	}
 
