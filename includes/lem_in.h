@@ -29,8 +29,15 @@ typedef struct 			s_room {
 	unsigned int		x;					// X coordinate
 	unsigned int		y;					// Y coordinate
 	char				**connections;		// Names of rooms for connections
+	struct s_room		**conn_pointers;	// Connect-pointer with connect-room
 	unsigned int		number_of_conn;		// Number of connections
 }						t_room;
+
+typedef struct 			s_way {
+	unsigned int		count_of_rooms;		// Count of rooms
+	t_room				**rooms;			// Way rooms
+}						t_way;
+
 
 typedef struct 			s_vars {
 	unsigned int		ant_number;			// Number of ants
@@ -43,11 +50,14 @@ typedef struct 			s_vars {
 	t_room				*end_room;			// End room pointer
 	t_room				**list_room;		// List rooms pointer
 	unsigned int		number_of_rooms;	// Number of rooms
+	t_way				**list_ways;		// List ways piinter
+	unsigned int		number_of_ways;		// Number of ways
 }						t_vars;
 
 
 extern t_vars	g_vars;
 
+int				ft_create_ways_table(void);
 int				ft_parser(char *str);
 int				main(void);
 

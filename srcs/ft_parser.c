@@ -42,6 +42,7 @@ static t_room			*ft_create_room(char **args){
 	room->x = ft_atoi(args[1]);							// Errors not handle
 	room->y = ft_atoi(args[2]);							// Errors not handle
 	room->connections = NULL;
+	room->conn_pointers = NULL;
 	room->number_of_conn = 0;
 	free(args[1]);
 	free(args[2]);
@@ -253,28 +254,37 @@ static t_room			*ft_get_room(char *name){
 	return ret;
 }
 
-static int				ft_add_one_connection(t_room *curent_room, char *room_name){
+static int				ft_add_one_connection(t_room *curent_room, t_room *room_connect, char *room_name){
 	print_debug("ft_add_one_connection start. str: %s, connection_number = %d, room_name = %s\n",
 			room_name, curent_room->number_of_conn, curent_room->name);
 	char			**conn_list = NULL;
+	t_room			**conn_pointer = NULL;
 	unsigned int	i = 0;
 
 	if(curent_room->number_of_conn == 0){
-		if(!(curent_room->connections = (char**)malloc(sizeof(char*))))
+		if(!(curent_room->connections = (char**)malloc(sizeof(char*))) ||
+			!(curent_room->conn_pointers = (t_room**)malloc(sizeof(t_room*))))
 			goto error;
 		curent_room->connections[0] = room_name;
+		curent_room->conn_pointers[0] = room_connect;
 		curent_room->number_of_conn += 1;
 	} else {
 		if(!(conn_list = (char**)malloc(sizeof(char*)
+			* (curent_room->number_of_conn + 1))) ||
+			!(conn_pointer = (t_room**)malloc(sizeof(t_room*)
 			* (curent_room->number_of_conn + 1))))
 			goto error;
 		while(i < curent_room->number_of_conn){
 			conn_list[i] = curent_room->connections[i];
+			conn_pointer[i] = curent_room->conn_pointers[i];
 			i++;
 		}
 		conn_list[i] = room_name;
+		conn_pointer[i] = room_connect;
 		free(curent_room->connections);
+		free(curent_room->conn_pointers);
 		curent_room->connections = conn_list;
+		curent_room->conn_pointers = conn_pointer;
 		curent_room->number_of_conn += 1;
 	}
 
@@ -296,9 +306,6 @@ static int				ft_add_connection(char *str){
 	t_room	*room_2;
 	char	*tmp_1;
 	char	*tmp_2;
-
-	write(1, str, ft_strlen(str));
-	write(1, "\n", 1);
 
 	list = ft_split(str, '-');
 	if(ft_get_str_number(list) != 2){
@@ -325,8 +332,8 @@ static int				ft_add_connection(char *str){
 			free(tmp_2);
 			goto error;
 		} else {
-			if (ft_add_one_connection(room_1, tmp_2) ||
-				ft_add_one_connection(room_2, tmp_1))
+			if (ft_add_one_connection(room_1, room_2, tmp_2) ||
+				ft_add_one_connection(room_2, room_1, tmp_1))
 				goto error;
 		}
 	}
@@ -344,7 +351,6 @@ error:
 		g_vars.end_flag = -1;
 		free(tmp);
 	}
-	// free(str);
 
 	print_debug("ft_add_room finish with ERROR\n");
 	return ERROR;										// Bad str

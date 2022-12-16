@@ -3,7 +3,7 @@
  * +1	The executable file must be named lem-in.
  * +2	You must submit a Makefile. That Makefile needs to compile the project and
  * 	must contain the usual rules. It can only recompile the program if necessary.
- * 3	If you are clever, you will use your library for your lem-in. Also submit your folder
+ * +3	If you are clever, you will use your library for your lem-in. Also submit your folder
  * 	libft including its own Makefile at the root of your repository. Your Makefile
  * 	will have to compile the library, and then compile your project.
  * +4	Your project must be written in C.
@@ -49,6 +49,8 @@
 /**
  * Work process
  * 1. Add error handler for ft_atoi (if get not number)
+ * 2. Delete rooms without connections
+ * 3. Add start and finish to list
  * 
  * RULES
  * А)
@@ -78,7 +80,9 @@ t_vars			g_vars = {
 	.list_room = NULL,
 	.start_room = NULL,
 	.end_room = NULL,
-	.number_of_rooms = 0
+	.number_of_rooms = 0,
+	.list_ways = NULL,
+	.number_of_ways = 0
 };
 
 static int		ft_exit(void){
@@ -93,25 +97,34 @@ static int		ft_exit(void){
 
 	print_debug("ft_exit start clean list rooms. room numbers = %d\n", g_vars.number_of_rooms);
 	while(i < g_vars.number_of_rooms){
-		for(unsigned int m = 0; m < g_vars.list_room[i]->number_of_conn; m++){
-			free(g_vars.list_room[i]->connections[m]);
+		if(g_vars.list_room[i]->number_of_conn != 0){
+			for(unsigned int m = 0; m < g_vars.list_room[i]->number_of_conn; m++){
+				free(g_vars.list_room[i]->connections[m]);
+			}
+			free(g_vars.list_room[i]->connections);
+			free(g_vars.list_room[i]->conn_pointers);
 		}
 		free(g_vars.list_room[i]->name);
-		free(g_vars.list_room[i]->connections);
 		free(g_vars.list_room[i]);
 		i++;
 	}
 
-	for(unsigned int m = 0; m < g_vars.start_room->number_of_conn; m++)
-		free(g_vars.start_room->connections[m]);
+	if(g_vars.start_room->number_of_conn != 0){
+		for(unsigned int m = 0; m < g_vars.start_room->number_of_conn; m++)
+			free(g_vars.start_room->connections[m]);
+		free(g_vars.start_room->connections);
+		free(g_vars.start_room->conn_pointers);
+	}
 	free(g_vars.start_room->name);
-	free(g_vars.start_room->connections);
 	free(g_vars.start_room);
 
-	for(unsigned int m = 0; m < g_vars.end_room->number_of_conn; m++)
-		free(g_vars.end_room->connections[m]);
+	if(g_vars.end_room->number_of_conn != 0){
+		for(unsigned int m = 0; m < g_vars.end_room->number_of_conn; m++)
+			free(g_vars.end_room->connections[m]);
+		free(g_vars.end_room->connections);
+		free(g_vars.end_room->conn_pointers);
+	}
 	free(g_vars.end_room->name);
-	free(g_vars.end_room->connections);
 	free(g_vars.end_room);
 
 	print_debug("ft_exit start clean list rooms. i = %d\n", i);
@@ -137,6 +150,9 @@ int				main(void){
 		free(buf);
 	}
 	free(buf);
+
+	// if (ft_create_ways_table())
+	// 	goto exit;
 
 	print_debug("Main finish success\n");
 	return ft_exit();
