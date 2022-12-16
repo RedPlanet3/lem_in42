@@ -43,8 +43,9 @@ typedef struct 			s_vars {
 	unsigned int		ant_number;			// Number of ants
 	unsigned short int	ant_number_flag;	// For read ants number
 	unsigned short int	start_flag;			// Found the start room
-	unsigned short int	end_flag;			// Return value for the whole program
+	unsigned short int	end_flag;			// Found the end room
 	char				*err_msg;			// For error message
+	int					ret_value;			// Return value for the whole program
 	unsigned short int	end_rooms_flag;		// Rooms reading finish
 	t_room				*start_room;		// Start room pointer
 	t_room				*end_room;			// End room pointer
@@ -57,6 +58,7 @@ typedef struct 			s_vars {
 
 extern t_vars	g_vars;
 
+int				ft_delete_empty_rooms(void);
 int				ft_create_ways_table(void);
 int				ft_parser(char *str);
 int				main(void);
