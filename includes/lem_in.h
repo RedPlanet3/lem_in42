@@ -66,12 +66,7 @@ int				main(void);
 
 char **sm_matrix;
 
-typedef struct 		s_step {
-	int				room;			// room index
-	char			old_ch;			//old char in matrix
-	struct 	s_step *next;
-	struct 	s_step *prew;        	
-}					t_step;
+
 
 
 #endif

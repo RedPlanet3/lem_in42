@@ -28,6 +28,13 @@ typedef struct	s_split
 	int			n;
 }				t_split;
 
+typedef struct 		s_step {
+	int				room;			// room index
+	char			old_ch;			//old char in matrix
+	struct 	s_step *next;
+	struct 	s_step *prew;        	
+}					t_step;
+
 int		get_next_line(int fd, char **line);
 void	*ft_memset(void *s, int c, size_t n);
 void	ft_bzero(void *s, size_t n);
