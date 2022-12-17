@@ -340,8 +340,9 @@ int						ft_delete_empty_rooms(void){
 	print_debug("ft_delete_empty_rooms start\n");
 	unsigned int	i = 0;
 
-	if(g_vars.start_room->number_of_conn == 0 ||
-		g_vars.end_room->conn_pointers == 0){
+	if(g_vars.start_room != NULL &&
+		(g_vars.start_room->number_of_conn == 0 ||
+		g_vars.end_room->conn_pointers == 0)){
 		print_debug("ret_flag = %d\n", g_vars.ret_value);
 		if(g_vars.ret_value == 0){
 			g_vars.err_msg = ft_strdup("start or end room don't have connectoins!");
@@ -380,7 +381,7 @@ static int				ft_add_connection(char *str){
 		g_vars.end_room &&
 		ft_put_room_to_list(g_vars.end_room)))				// Add end room to end list_room
 		goto error;
-
+	
 	list = ft_split(str, '-');
 	if(ft_get_str_number(list) != 2){
 		for(int i = 0; list[i]; i++)

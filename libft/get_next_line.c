@@ -12,72 +12,68 @@
 
 #include "libft.h"
 
-static int		offset(int i, int fd, char **readed)
+static int		offset(int i, char *str)
 {
 	char		*temp;
 
-	temp = ft_strdup(readed[fd] + i + 1);
+	temp = ft_strdup(str + i + 1);
 	if (temp == NULL)
 		return (-1);
-	free(readed[fd]);
-	readed[fd] = temp;
+	ft_bzero(str, BUFFER_SIZE * 2);
+	for(int k = 0; k < (int)ft_strlen(temp); k++)
+		str[k] = temp[k];
+	free(temp);
+
 	return (1);
 }
 
-static int		fail(int fd, char **readed)
+static int		fail(char *str)
 {
-	if (readed[fd])
-	{
-		free(readed[fd]);
-		readed[fd] = NULL;
-	}
+	ft_bzero(str, BUFFER_SIZE * 2);
 	return (-1);
 }
 
-static int		cutter(int fd, char **line, char **readed)
+static int		cutter(char **line, char* str)
 {
 	int i;
 
 	i = 0;
-	while (readed[fd][i] != '\n' && readed[fd][i] != '\0')
+	while (str[i] != '\n' && str[i] != '\0')
 		i++;
-	if (readed[fd][i] == '\n')
-	{
-		*line = ft_substr(readed[fd], 0, i);
+	if (str[i] == '\n'){
+		*line = ft_substr(str, 0, i);
 		if (*line == NULL)
-			return (fail(fd, readed));
-	}
-	else if (readed[fd][i] == '\0')
-	{
-		*line = ft_strdup(readed[fd]);
+			return (fail(str));
+	} else if (str[i] == '\0') {
+		*line = ft_strdup(str);
 		if (*line == NULL)
-			return (fail(fd, readed));
-		free(readed[fd]);
-		readed[fd] = NULL;
+			return (fail(str));
+		ft_bzero(str, BUFFER_SIZE * 2);
 		return (0);
 	}
-	return (offset(i, fd, readed));
+	return (offset(i, str));
 }
 
 int				get_next_line(int fd, char **line)
 {
-	static char	*readed[256];
+	static char	str[BUFFER_SIZE * 2];
 	char		buf[BUFFER_SIZE + 1];
 	char		*temp;
 	int			n;
 
 	if (fd < 0 || !line || BUFFER_SIZE <= 0 || read(fd, buf, 0) < 0)
 		return (-1);
-	readed[fd] = (!readed[fd] ? ft_strdup("") : readed[fd]);
-	while (!(ft_strchr(readed[fd], '\n')) &&
+	while (!(ft_strchr(str, '\n')) &&
 		(n = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 		buf[n] = '\0';
-		temp = ft_strjoin(readed[fd], buf);
+		temp = ft_strjoin(str, buf);
 		if (!temp)
-			return (fail(fd, readed));
-		free(readed[fd]);
-		readed[fd] = temp;
+			return (fail(str));
+		ft_bzero(str, BUFFER_SIZE * 2);
+		for(int k = 0; k < (int)ft_strlen(temp); k++)
+			str[k] = temp[k];
+		free(temp);
 	}
-	return (cutter(fd, line, readed));
+	return (cutter(line, str));
 }

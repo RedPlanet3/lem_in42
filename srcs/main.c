@@ -97,7 +97,7 @@ static int		ft_exit(void){
 	}
 
 	print_debug("ft_exit start clean list rooms. room numbers = %d\n", g_vars.number_of_rooms);
-	while(i < (g_vars.number_of_rooms - 1)){
+	while(i < (g_vars.number_of_rooms - ((g_vars.number_of_rooms == 0) ? 0 : 1))){
 		if(g_vars.list_room[i]->number_of_conn != 0){
 			for(unsigned int m = 0; m < g_vars.list_room[i]->number_of_conn; m++){
 				free(g_vars.list_room[i]->connections[m]);
@@ -110,23 +110,28 @@ static int		ft_exit(void){
 		i++;
 	}
 
-	if(g_vars.start_room->number_of_conn != 0){
-		for(unsigned int m = 0; m < g_vars.start_room->number_of_conn; m++)
-			free(g_vars.start_room->connections[m]);
-		free(g_vars.start_room->connections);
-		free(g_vars.start_room->conn_pointers);
+	if(g_vars.start_room != NULL){
+		if(g_vars.start_room->number_of_conn != 0){
+			for(unsigned int m = 0; m < g_vars.start_room->number_of_conn; m++)
+				free(g_vars.start_room->connections[m]);
+			free(g_vars.start_room->connections);
+			free(g_vars.start_room->conn_pointers);
+		}
+		free(g_vars.start_room->name);
+		free(g_vars.start_room);
 	}
-	free(g_vars.start_room->name);
-	free(g_vars.start_room);
 
-	if(g_vars.end_room->number_of_conn != 0){
-		for(unsigned int m = 0; m < g_vars.end_room->number_of_conn; m++)
-			free(g_vars.end_room->connections[m]);
-		free(g_vars.end_room->connections);
-		free(g_vars.end_room->conn_pointers);
+	if(g_vars.end_room != NULL){
+		if(g_vars.end_room != NULL &&
+			g_vars.end_room->number_of_conn != 0){
+			for(unsigned int m = 0; m < g_vars.end_room->number_of_conn; m++)
+				free(g_vars.end_room->connections[m]);
+			free(g_vars.end_room->connections);
+			free(g_vars.end_room->conn_pointers);
+		}
+		free(g_vars.end_room->name);
+		free(g_vars.end_room);
 	}
-	free(g_vars.end_room->name);
-	free(g_vars.end_room);
 
 	print_debug("ft_exit start clean list rooms. i = %d\n", i);
 	if (g_vars.list_room){
