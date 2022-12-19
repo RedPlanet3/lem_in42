@@ -14,6 +14,8 @@ static enum str_type	ft_get_type(char *str){
 	} else if (!ft_strcmp(str, "##end") ||				// Get end str
 				g_vars.end_flag == 1) {
 		return return_type = ROOM_END;
+	} else if (str[0] == '#') {							// Comment
+		return return_type = COMMENT;
 	} else if (g_vars.end_rooms_flag == 0) {			// Get rooms
 		return return_type = ROOM_ADD;
 	} else if (g_vars.end_rooms_flag) {					// Get connections
@@ -263,10 +265,19 @@ static t_room			*ft_get_room(char *name){
 	return ret;
 }
 
+static int				ft_check_to_have_this_connection(t_room *curent_room, t_room *room_connect){
+	for(unsigned int i = 0; i < curent_room->number_of_conn; i++){
+		if(curent_room->conn_pointers[i] == room_connect)
+			return 1;
+	}
+
+	return 0;
+}
+
 static int				ft_add_one_connection(t_room *curent_room,
 											t_room *room_connect,
 											char *room_name){
-	print_debug("ft_add_one_connection start. str: %s, connection_number = %d, room_name = %s\n",
+	print_debug("ft_add_one_connection start. name: %s, connection_number = %d, room_name = %s\n",
 			room_name, curent_room->number_of_conn, curent_room->name);
 	char			**conn_list = NULL;
 	t_room			**conn_pointer = NULL;
@@ -280,6 +291,10 @@ static int				ft_add_one_connection(t_room *curent_room,
 		curent_room->conn_pointers[0] = room_connect;
 		curent_room->number_of_conn += 1;
 	} else {
+		if(ft_check_to_have_this_connection(curent_room, room_connect)){
+			free(room_name);
+			goto success;
+		}
 		if(!(conn_list = (char**)malloc(sizeof(char*)
 			* (curent_room->number_of_conn + 1))) ||
 			!(conn_pointer = (t_room**)malloc(sizeof(t_room*)
@@ -298,8 +313,11 @@ static int				ft_add_one_connection(t_room *curent_room,
 		curent_room->conn_pointers = conn_pointer;
 		curent_room->number_of_conn += 1;
 	}
+	goto success;
 
-	print_debug("ft_add_one_connection end success\n");
+success:
+	print_debug("ft_add_one_connection end success. connection_number = %d, room_name = %s\n",
+			curent_room->number_of_conn, curent_room->name);
 	return SUCCESS;
 error:
 	free(room_name);
@@ -449,16 +467,19 @@ int						ft_parser(char *str){
 		ret = ft_get_start_room(temp);					// Create start room
 		break;
 	case ROOM_END:
-		ret = ft_get_end_room(temp);						// Create end room
+		ret = ft_get_end_room(temp);					// Create end room
 		break;
 	case ROOM_ADD:
-		ret = ft_add_room(temp);							// Create end room
+		ret = ft_add_room(temp);						// Create end room
 		break;
 	case ROOM_CONN:
-		ret = ft_add_connection(temp);		// Create end room
+		ret = ft_add_connection(temp);					// Create end room
+		break;
+	case COMMENT:
+		ret = 0;										// Comment
 		break;
 	default:
-		ret = 1;							// Return error
+		ret = 1;										// Return error
 	};
 	free(temp);
 

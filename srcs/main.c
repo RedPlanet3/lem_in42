@@ -51,6 +51,8 @@
  * 1. Add error handler for ft_atoi (if get not number)
  * +2. Delete rooms without connections
  * +3. Add start and finish to list
+ * +4. Add comments in parser
+ * +5. Add double connections in rooms handler
  * 
  * RULES
  * А)

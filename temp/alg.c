@@ -177,10 +177,10 @@ void alg()
     }
     ft_lst_del_back_pn(steps); // del steps
     
-    while (/* condition */)
-    {
+    // while (/* condition */)
+    // {
         
-    }
+    // }
     
 
 }
