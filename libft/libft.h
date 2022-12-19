@@ -16,7 +16,7 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include "../includes/lem_in.h"
+// # include "../includes/lem_in.h"
 
 # define BUFFER_SIZE 64
 

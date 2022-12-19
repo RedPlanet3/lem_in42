@@ -3,7 +3,7 @@
 
 # include "../libft/libft.h"
 
-# define DEBUG
+// # define DEBUG
 # define SUCCESS		0
 # define ERROR			1
 # define BUFF_SIZE		1024
@@ -21,6 +21,7 @@ enum str_type {
 	ROOM_END	= 2,
 	ROOM_ADD	= 3,
 	ROOM_CONN	= 4,
+	COMMENT		= 5,
 	STR_ERROR	= -1
 };
 
@@ -56,7 +57,6 @@ typedef struct 			s_vars {
 	unsigned int		number_of_ways;		// Number of ways
 }						t_vars;
 
-
 extern t_vars	g_vars;
 
 int				ft_delete_empty_rooms(void);
@@ -64,9 +64,6 @@ int				ft_create_ways_table(void);
 int				ft_parser(char *str);
 int				main(void);
 
-char **sm_matrix;
-
-
-
+// char **sm_matrix;
 
 #endif
