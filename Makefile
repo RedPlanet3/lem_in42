@@ -31,7 +31,7 @@ clean:
 
 fclean:
 			(cd libft; make fclean)
-			(cd includes; rm libft.a)
+			-(cd includes; rm libft.a)
 			$(RM) $(OBJS) $(NAME)
 
 re:			fclean all

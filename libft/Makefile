@@ -56,9 +56,9 @@ $(NAME):		$(OBJ) $(HEADER)
 all:			$(NAME)
 
 clean:
-				rm -f $(OBJ)
+				-rm -f $(OBJ)
 
 fclean:			clean
-				rm -f $(OBJ) $(NAME)
+				-rm -f $(OBJ) $(NAME)
 
 re:				fclean all
