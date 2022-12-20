@@ -75,6 +75,21 @@ error:
 	return ERROR;
 }
 
+static int				ft_preatoi_checker(char *str){
+	print_debug("ft_preatoi_checker start. str: %s\n", str);
+	size_t	size = ft_strlen(str);
+
+	for(unsigned long i = 0; i < size; i++)
+		if(!ft_isdigit(str[i]))
+			goto error;
+
+	print_debug("ft_preatoi_checker finish success\n");
+	return SUCCESS;
+error:
+	print_debug("ft_preatoi_checker finish with error\n");
+	return ERROR;
+}
+
 static t_room			*ft_create_room(char **args){
 	print_debug("ft_create_room start.\n");
 	t_room	*room;
@@ -84,9 +99,12 @@ static t_room			*ft_create_room(char **args){
 		goto error;
 	}
 
+	if(ft_preatoi_checker(args[1]) || ft_preatoi_checker(args[2]))
+		goto error;
+
 	room->name = args[0];
-	room->x = ft_atoi(args[1]);							// Errors not handle
-	room->y = ft_atoi(args[2]);							// Errors not handle
+	room->x = ft_atoi(args[1]);
+	room->y = ft_atoi(args[2]);
 	room->connections = NULL;
 	room->conn_pointers = NULL;
 	room->number_of_conn = 0;
@@ -130,7 +148,8 @@ static int				ft_get_start_room(char *str){
 				str, g_vars.start_flag);
 	char	**list;
 
-	if (g_vars.start_flag == 2)
+	if (g_vars.start_flag == 2 ||							// If double start lable in map
+		g_vars.end_flag == 1)								// If get end label after start label
 		goto error;
 
 	if (!g_vars.start_flag) {
@@ -160,15 +179,16 @@ error:
 	free(temp);
 
 	print_debug("ft_get_start_room finish with ERROR\n");
-	return ERROR;										// Bad str
+	return ERROR;											// Bad str
 }
 
-static int				ft_get_end_room(char* str){
+static int				ft_get_end_room(char *str){
 	print_debug("ft_get_end_room start. str: %s; end_rooms_flag = %d\n",
 				str, g_vars.end_rooms_flag);
 	char	**list;
 
-	if (g_vars.end_flag == 2)							// If double end lable in map
+	if (g_vars.end_flag == 2 ||								// If double end lable in map
+		g_vars.start_flag == 1)								// If get start label after end label
 		goto error;
 
 	if (g_vars.end_flag == 0) {								// For scip end lable
@@ -202,10 +222,19 @@ static int				ft_get_ant_number(char *str){
 	print_debug("ft_get_ant_number start. str: %s\n", str);
 	g_vars.ant_number_flag = 0;
 
-	g_vars.ant_number = ft_atoi(str);					// Errors not handle
+	if(ft_preatoi_checker(str))
+		goto error;
+
+	g_vars.ant_number = ft_atoi(str);
+
+	if(g_vars.ant_number == 0)
+		goto error;
 
 	print_debug("ft_get_ant_number finish success\n");
 	return SUCCESS;
+error:
+	print_debug("ft_get_ant_number finish with error\n");
+	return ERROR;
 }
 
 static int				ft_add_room(char *str){
@@ -220,6 +249,7 @@ static int				ft_add_room(char *str){
 		for(int i = 0; list[i]; i++)
 			free(list[i]);
 		free(list);
+		// if(g_vars.number_of_rooms)
 		g_vars.end_rooms_flag = 1;
 		ft_parser(str);
 		goto success;
@@ -395,9 +425,10 @@ static int				ft_add_connection(char *str){
 	char	*tmp_1;
 	char	*tmp_2;
 
-	if((g_vars.list_room[g_vars.number_of_rooms - 1] !=
+	if(!g_vars.end_room || !g_vars.start_room ||				// No end or start room
+		(g_vars.list_room[g_vars.number_of_rooms - 1] !=
 		g_vars.end_room &&
-		ft_put_room_to_list(g_vars.end_room)))				// Add end room to end list_room
+		ft_put_room_to_list(g_vars.end_room)))					// Add end_room to end list_room
 		goto error;
 	
 	list = ft_split(str, '-');

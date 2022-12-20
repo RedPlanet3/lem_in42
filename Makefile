@@ -4,6 +4,8 @@ SRCS		= $(shell find ./srcs -type f -name "*.c")
 
 OBJS		= $(SRCS:.c=.o)
 
+HEADERS		= $(shell find ./srcs ./libft -type f -name "*.h")
+
 FLAGS		= -Wall -Wextra -Werror -g
 
 CC			= gcc
@@ -17,7 +19,7 @@ RM			= rm -rf
 .c.o:
 			$(CC) $(FLAGS) -c $< -o $(<:.c=.o)
 
-$(NAME):	$(OBJS)
+$(NAME):	$(OBJS) $(HEADERS)
 			(cd libft; make; cp libft.a ../includes/.)
 			$(CC) $(FLAGS) -o $(NAME) $(OBJS) ./includes/libft.a
 

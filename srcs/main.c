@@ -48,11 +48,18 @@
 
 /**
  * Work process
- * 1. Add error handler for ft_atoi (if get not number)
+ * +1. Add error handler for ft_atoi (if get not number)
  * +2. Delete rooms without connections
  * +3. Add start and finish to list
  * +4. Add comments in parser
  * +5. Add double connections in rooms handler
+ * +6. Handle empty map
+ * 7. Handle errors in coordinates
+ * +8. Handle zero ants error
+ * +9. Handle negative number ats
+ * +10. Handle no end/start room errors
+ * 11. Handle no rooms and no connections errors
+ * +12. Handle start comment after end and vice versa
  * 
  * RULES
  * А)
