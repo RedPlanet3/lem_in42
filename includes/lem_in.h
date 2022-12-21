@@ -57,23 +57,29 @@ typedef struct 			s_vars {
 	unsigned int		number_of_ways;		// Number of ways
 }						t_vars;
 
-extern t_vars	g_vars;
+typedef struct 			s_fin_ways {
+	t_step				**step_pointers;	// Connect-pointer with connect-room
+	struct	s_fin_ways 	*next;				// ERROR (need pointer)
+}						t_fin_ways;
+
+extern t_vars			g_vars;				// Global struct of variables
+extern t_fin_ways 		**g_fin_ways;		// NEED DESCRIPRION
+// char					**sm_matrix;		// ERROR (need extern and single definition)
+// unsigned int			number_of_ways;		// ERROR (need extern and single definition)
 
 int				ft_delete_empty_rooms(void);
 int				ft_create_ways_table(void);
 int				ft_parser(char *str);
 int				main(void);
 
-
-typedef struct 			s_fin_ways {
+typedef struct 			s_fin_ways_l {
 	int					*step_index;	// array of index way
 	int					length_way;		//length way
-	struct	s_fin_ways 	*next;
-}						t_fin_ways;
+	struct	s_fin_ways_l 	*next;
+}						t_fin_ways_l;
 
 extern t_fin_ways **g_fin_ways;			//структура содержащая финальные пути
 extern t_step **steps;					//структура путей для алгоритма
 extern char **sm_matrix;				//матрица смежности
-
 
 #endif
