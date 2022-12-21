@@ -64,16 +64,16 @@ int				ft_create_ways_table(void);
 int				ft_parser(char *str);
 int				main(void);
 
-char **sm_matrix;
-
-unsigned int		number_of_ways;
 
 typedef struct 			s_fin_ways {
-	t_step				**step_pointers;	// Connect-pointer with connect-room
-	struct	s_fin_ways 	next;
+	int					*step_index;	// array of index way
+	int					length_way;		//length way
+	struct	s_fin_ways 	*next;
 }						t_fin_ways;
 
-extern t_fin_ways **g_fin_ways;
+extern t_fin_ways **g_fin_ways;			//структура содержащая финальные пути
+extern t_step **steps;					//структура путей для алгоритма
+extern char **sm_matrix;				//матрица смежности
 
 
 #endif

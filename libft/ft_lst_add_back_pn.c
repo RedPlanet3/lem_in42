@@ -19,9 +19,9 @@ void	ft_lst_add_back_pn(t_step **lst, t_step *new)
 
 	if (*lst != NULL)
 	{
-		back = ft_lstlast(*lst);
+		back = ft_lstlast_pn(*lst);
 		back->next = new;
-		new->prew = back;
+		// new->prew = back;
 	}
 	else
 		*lst = new;

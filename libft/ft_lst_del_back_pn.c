@@ -20,10 +20,8 @@ void	ft_lst_del_back_pn(t_step **lst)
 
 	if (*lst != NULL)
 	{
-		back = ft_lstlast(*lst);
-		pr = back->prew;
-		if (pr!= NULL)
-			pr->next = NULL;
+		back = ft_lstlast_pn(*lst);
 		free(back);
+		back = NULL;
 	}
 }

@@ -29,10 +29,10 @@ typedef struct	s_split
 }				t_split;
 
 typedef struct 		s_step {
+	int				prev_room;
 	int				room;			// room index
 	char			old_ch;			//old char in matrix
-	struct 	s_step *next;
-	struct 	s_step *prew;        	
+	struct s_step	*next;
 }					t_step;
 
 int		get_next_line(int fd, char **line);
@@ -80,6 +80,6 @@ t_step	*ft_lstfirst_pn(t_step *lst);
 void	ft_lstiter_pn(t_step *lst, void (*f)(void *));
 t_step	*ft_lstlast_pn(t_step *lst);
 t_step	*ft_lstmap_pn(t_step *lst, void *(*f)(void *), void (*del)(void *));
-t_step	*ft_lstnew_pn(int index, char old);
+t_step	*ft_lstnew_pn(int index, char old, int prev_room);
 int		ft_lstsize_pn(t_step *lst);
 #endif

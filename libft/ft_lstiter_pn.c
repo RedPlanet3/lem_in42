@@ -18,8 +18,8 @@ void	ft_lstiter_pn(t_step *lst, void (*f)(void *))
 		return ;
 	while (lst->next != NULL)
 	{
-		f(lst->content);
+		f(lst->room);
 		lst = lst->next;
 	}
-	f(lst->content);
+	f(lst->room);
 }

@@ -13,14 +13,14 @@
 #include "libft.h"
 
 
-t_step	*ft_lstnew_pn(int index, char old)
+t_step	*ft_lstnew_pn(int index, char old, int prev_room)
 {
 	t_step	*new;
 
 	new = (t_step *)ft_malloc(sizeof(t_step));
 	new->room = index;
 	new->old_ch = old;
+	new->prev_room = prev_room;
 	new->next = NULL;
-	new->prew = NULL;
 	return (new);
 }
