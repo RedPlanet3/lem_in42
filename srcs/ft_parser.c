@@ -172,14 +172,14 @@ static int				ft_get_start_room(char *str){
 	return SUCCESS;
 
 error:
-	char *temp = ft_strdup("Bad map: ");
+	{char *temp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(temp, str);
 	g_vars.ret_value = -1;
 	free(str);
 	free(temp);
 
 	print_debug("ft_get_start_room finish with ERROR\n");
-	return ERROR;											// Bad str
+	return ERROR;	}										// Bad str
 }
 
 static int				ft_get_end_room(char *str){
@@ -208,14 +208,15 @@ static int				ft_get_end_room(char *str){
 	return SUCCESS;
 
 error:
-	char *temp = ft_strdup("Bad map: ");
+{	char *temp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(temp, str);
 	g_vars.ret_value = -1;
 	free(str);
 	free(temp);
 
 	print_debug("ft_get_end_room finish with ERROR\n");
-	return ERROR;										// Bad str
+	return ERROR;		
+	}								// Bad str
 }
 
 static int				ft_get_ant_number(char *str){
@@ -264,7 +265,7 @@ success:
 	return SUCCESS;
 
 error:
-	char *tmp = ft_strdup("Bad map: ");
+{	char *tmp = ft_strdup("Bad map: ");
 	g_vars.err_msg = ft_strjoin(tmp, str);
 	g_vars.ret_value = -1;
 	free(str);
@@ -272,6 +273,7 @@ error:
 
 	print_debug("ft_add_room finish with ERROR\n");
 	return ERROR;										// Bad str
+}
 }
 
 static t_room			*ft_get_room(char *name){
