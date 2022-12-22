@@ -193,7 +193,7 @@ void alg()
     int a;
     g_vars.number_of_ways = 0;
    
-    for(unsigned int i; i < g_vars.number_of_rooms; i++)
+    for(unsigned int i = 0; i < g_vars.number_of_rooms; i++)
     {
         g_vars.list_room[i]->index = i;
     }

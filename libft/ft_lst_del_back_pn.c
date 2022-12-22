@@ -16,7 +16,6 @@
 void	ft_lst_del_back_pn(t_step **lst)
 {
 	t_step	*back;
-	t_step	*pr;
 
 	if (*lst != NULL)
 	{
