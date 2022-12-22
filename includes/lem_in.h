@@ -57,29 +57,34 @@ typedef struct 			s_vars {
 	unsigned int		number_of_ways;		// Number of ways
 }						t_vars;
 
-typedef struct 			s_fin_ways {
-	t_step				**step_pointers;	// Connect-pointer with connect-room
-	struct	s_fin_ways 	*next;				// ERROR (need pointer)
-}						t_fin_ways;
+
 
 extern t_vars			g_vars;				// Global struct of variables
-extern t_fin_ways 		**g_fin_ways;		// NEED DESCRIPRION
-// char					**sm_matrix;		// ERROR (need extern and single definition)
-// unsigned int			number_of_ways;		// ERROR (need extern and single definition)
+extern t_fin_ways 		**g_fin_ways;			//структура содержащая финальные пути
+extern t_step 			**steps;					//структура путей для алгоритма
+extern char 			**sm_matrix;				//матрица смежности
+
 
 int				ft_delete_empty_rooms(void);
 int				ft_create_ways_table(void);
 int				ft_parser(char *str);
 int				main(void);
+int 			check_connection(int dest);
+void 			create_matrix(unsigned int number_of_rooms);
+void 			full_matrix(int i, int j, char a, char b);
+int 			find_ch(int room, int start, char c);
+int 			finish_check(int room);
+void 			rollback();
+int 			room_check(int room, int ch);
+int 			find_minus(int ch, int room);
+int 			full_current_step(int room);
+void 			full_finish_ways(void);
+void 			alg(void);
 
-typedef struct 			s_fin_ways_l {
-	int					*step_index;	// array of index way
-	int					length_way;		//length way
-	struct	s_fin_ways_l 	*next;
-}						t_fin_ways_l;
 
-extern t_fin_ways **g_fin_ways;			//структура содержащая финальные пути
-extern t_step **steps;					//структура путей для алгоритма
-extern char **sm_matrix;				//матрица смежности
+
+
+
+
 
 #endif

@@ -1,13 +1,13 @@
 #include "../includes/lem_in.h"
-t_step **steps;
-char **sm_matrix;
+// t_step **steps;
+// char **sm_matrix;
 
 
 // Проверка на использованные кормнаты в пути и на возврат в старт
 // 0 - связь использовать нельзя
 int check_connection(int dest) 
 {
-    t_step *tmp_steps = steps;
+    t_step *tmp_steps = *steps;
 
     while (tmp_steps->next != NULL)
 	{
@@ -52,9 +52,9 @@ int find_ch(int room, int start, char c)
 //проверка на связь с финишной точкой и на ее доступность
 int finish_check(int room)
 {
-    for(int i = 0; i < g_vars.list_room[room]->number_of_conn; i++)
+    for(unsigned int i = 0; i < g_vars.list_room[room]->number_of_conn; i++)
     {
-        if (g_vars.list_room[room]->conn_pointers[i]->index == g_vars.number_of_rooms - 1)        
+        if (g_vars.list_room[room]->conn_pointers[i]->index == (int)g_vars.number_of_rooms - 1)        
         {
             if (find_ch(room, 0, '+'))
                 return 0;
@@ -70,7 +70,7 @@ int finish_check(int room)
 //  2. удаление комнаты из steps
 void rollback()
 {
-    t_step *del_step = ft_lstlast_pn(steps);
+    t_step *del_step = ft_lstlast_pn(*steps);
     if (del_step->old_ch == ' ')
         full_matrix(del_step->prev_room, del_step->room, ' ', ' ');
     else if (del_step->old_ch == '-')
@@ -122,7 +122,7 @@ int find_minus(int ch, int room)
 //
 int full_current_step(int room)
 {
-    int ch;
+    int ch = 0;
     int a;
     // if (room == -1)
     //     return -1;
@@ -157,7 +157,7 @@ int full_current_step(int room)
     }
     else
     {    
-        for (int i = 0; i < g_vars.list_room[room]->number_of_conn; i++)
+        for (unsigned int i = 0; i < g_vars.list_room[room]->number_of_conn; i++)
         {
             a = room_check(room, g_vars.list_room[room]->conn_pointers[i]->index);
             if (a == -2)
@@ -193,14 +193,14 @@ void alg()
     int a;
     g_vars.number_of_ways = 0;
    
-    for(int i; i < g_vars.number_of_rooms; i++)
+    for(unsigned int i; i < g_vars.number_of_rooms; i++)
     {
         g_vars.list_room[i]->index = i;
     }
    
     create_matrix(g_vars.number_of_rooms); // ее потом нужно будет очистить по завершени/ю алгоритма
 
-    for (int i = 0; i < g_vars.list_room[0]->number_of_conn; i++)
+    for (unsigned int i = 0; i < g_vars.list_room[0]->number_of_conn; i++)
     {
         ft_lst_add_back_pn(steps, ft_lstnew_pn(0,' ', 0));
         ft_lst_add_back_pn(steps, ft_lstnew_pn(g_vars.list_room[0]->conn_pointers[i]->index,' ', 0));

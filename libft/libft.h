@@ -35,6 +35,12 @@ typedef struct 		s_step {
 	struct s_step	*next;
 }					t_step;
 
+typedef struct 			s_fin_ways {
+	int					*step_index;	// array of index way
+	int					length_way;		//length way
+	struct	s_fin_ways 	*next;
+}						t_fin_ways;
+
 int		get_next_line(int fd, char **line);
 void	*ft_memset(void *s, int c, size_t n);
 void	ft_bzero(void *s, size_t n);
@@ -82,4 +88,12 @@ t_step	*ft_lstlast_pn(t_step *lst);
 t_step	*ft_lstmap_pn(t_step *lst, void *(*f)(void *), void (*del)(void *));
 t_step	*ft_lstnew_pn(int index, char old, int prev_room);
 int		ft_lstsize_pn(t_step *lst);
+void	*ft_malloc(size_t size);
+void	ft_lst_add_back_one(t_fin_ways **lst, t_fin_ways *new);
+void	ft_lstclear_one(t_fin_ways **lst);
+int	ft_lstsize_one(t_fin_ways *lst);
+int* full_arr_int(t_step *lst, int size);
+t_fin_ways	*ft_lstlast_one(t_fin_ways *lst);
+t_fin_ways	*ft_lstnew_one(t_step	**steps);
+
 #endif

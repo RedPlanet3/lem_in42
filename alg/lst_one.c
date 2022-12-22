@@ -1,18 +1,5 @@
 #include "../includes/lem_in.h"
 
-void	ft_lst_add_back_one(t_fin_ways **lst, t_fin_ways *new)
-{
-	t_fin_ways	*back;
-
-	if (*lst != NULL)
-	{
-		back = ft_lstlast_one(*lst);
-		back->next = new;
-	}
-	else
-		*lst = new;
-}
-
 void	ft_lstclear_one(t_fin_ways **lst)
 {
 	t_fin_ways	*buf;
@@ -26,6 +13,18 @@ void	ft_lstclear_one(t_fin_ways **lst)
 	}
 }
 
+void	ft_lst_add_back_one(t_fin_ways **lst, t_fin_ways *new)
+{
+	t_fin_ways	*back;
+
+	if (*lst != NULL)
+	{
+		back = ft_lstlast_one(*lst);
+		back->next = new;
+	}
+	else
+		*lst = new;
+}
 
 int	ft_lstsize_one(t_fin_ways *lst)
 {
