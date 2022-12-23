@@ -41,6 +41,7 @@ typedef struct 			s_fin_ways {
 	struct	s_fin_ways 	*next;
 }						t_fin_ways;
 
+
 int		get_next_line(int fd, char **line);
 void	*ft_memset(void *s, int c, size_t n);
 void	ft_bzero(void *s, size_t n);
