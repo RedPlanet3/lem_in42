@@ -6,7 +6,7 @@ OBJS		= $(SRCS:.c=.o)
 
 HEADERS		= $(shell find ./srcs ./libft -type f -name "*.h")
 
-FLAGS		= -Wall -Wextra -Werror -g
+FLAGS		= -Wall -Wextra -Werror -g -v
 
 CC			= gcc
 
