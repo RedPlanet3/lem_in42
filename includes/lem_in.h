@@ -3,6 +3,7 @@
 
 # include "../libft/libft.h"
 
+
 // # define DEBUG
 # define SUCCESS		0
 # define ERROR			1
@@ -60,8 +61,8 @@ typedef struct 			s_vars {
 
 
 extern t_vars			g_vars;				// Global struct of variables
-extern t_fin_ways 		**g_fin_ways;			//структура содержащая финальные пути
-extern t_step 			**g_steps;					//структура путей для алгоритма
+extern t_fin_ways 		*g_fin_ways;			//структура содержащая финальные пути
+extern t_step 			*g_steps;					//структура путей для алгоритма
 extern char 			**g_sm_matrix;				//матрица смежности
 
 
@@ -80,5 +81,7 @@ int 			find_minus(int ch, int room);
 int 			full_current_step(int room);
 void 			full_finish_ways(void);
 void 			alg(void);
+void			print_ways(t_fin_ways **g_fin_ways);
+
 
 #endif

@@ -8,6 +8,7 @@ void	ft_lstclear_one(t_fin_ways **lst)
 	{
 		buf = *lst;
 		*lst = (*lst)->next;
+
         free(buf->step_index);
 		free(buf);
 	}
@@ -79,4 +80,19 @@ t_fin_ways	*ft_lstnew_one(t_step	**steps)
 	new->next = NULL;
 	return (new);
 }
+
+void print_ways(t_fin_ways **g_fin_ways)
+{
+	printf("print_ways: %d\n", g_vars.number_of_ways);
+	t_fin_ways *ways = *g_fin_ways;
+	while (ways)
+	{
+		for (int i = 0; i < ways->length_way; i++)
+		{
+			write(1, g_vars.list_room[ways->step_index[i]]->name, ft_strlen(g_vars.list_room[ways->step_index[i]]->name));
+		}
+		ways = ways->next;
+	}
+}
+
 

@@ -94,9 +94,9 @@ t_vars			g_vars = {
 	.number_of_ways = 0,
 	.ret_value = 0
 };
-    t_step  **g_steps = NULL;
-	t_fin_ways 		**g_fin_ways = NULL;
-	char 			**g_sm_matrix = NULL;
+    t_step  		*g_steps = NULL;
+	t_fin_ways 		*g_fin_ways = NULL;
+	char 			**g_sm_matrix;
 
 
 static int		ft_exit(void){
@@ -161,16 +161,20 @@ int				main(void){
 	char		*buf;
 
 	print_debug("Main start\n");
-
+	
 	while((ret = get_next_line(0, &buf)) > 0) {
 		print_debug("Main gnl next iteration: %s\n", buf);
 		if (ft_parser(buf))
 			goto error;								// Free memory for error in ft_parser
 		free(buf);
 	}
+	
 	if(ft_delete_empty_rooms())
 		goto error;
 	free(buf);
+
+	alg();
+	print_ways(&g_fin_ways);
 
 	// if (fend_rooms_flagt_create_ways_table())
 	// 	goto exit;

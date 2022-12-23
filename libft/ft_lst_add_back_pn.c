@@ -16,12 +16,11 @@
 void	ft_lst_add_back_pn(t_step **lst, t_step *new)
 {
 	t_step	*back;
-
+	printf("add %d\n", new->room);
 	if (*lst != NULL)
 	{
 		back = ft_lstlast_pn(*lst);
 		back->next = new;
-		// new->prew = back;
 	}
 	else
 		*lst = new;

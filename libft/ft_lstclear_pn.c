@@ -21,6 +21,7 @@ void	ft_lstclear_pn(t_step **lst)
 	{
 		buf = *lst;
 		*lst = (*lst)->next;
+		printf("ft_lstclear_pn(t_step **lst)\n");
 		free(buf);
 	}
 }

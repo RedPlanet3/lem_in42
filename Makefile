@@ -14,6 +14,8 @@ LD			= ld
 
 RM			= rm -rf
 
+MAP         = maps/map_01_my
+
 .PHONY:		all clean fclean re
 
 .c.o:
@@ -24,6 +26,8 @@ $(NAME):	$(OBJS) $(HEADERS)
 			$(CC) $(FLAGS) -o $(NAME) $(OBJS) ./includes/libft.a
 
 all:		$(NAME)
+
+run:		re ./$(NAME) $(MAP)
 
 clean:
 			(cd libft; make clean)
