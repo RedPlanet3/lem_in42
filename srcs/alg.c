@@ -192,8 +192,6 @@ void alg()
 {
     int a;
     g_vars.number_of_ways = 0;
-    t_step  **g_steps;
-    g_steps = NULL;
    
     for(unsigned int i = 0; i < g_vars.number_of_rooms; i++)
     {

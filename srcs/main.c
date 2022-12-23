@@ -94,6 +94,10 @@ t_vars			g_vars = {
 	.number_of_ways = 0,
 	.ret_value = 0
 };
+    t_step  **g_steps = NULL;
+	t_fin_ways 		**g_fin_ways = NULL;
+	char 			**g_sm_matrix = NULL;
+
 
 static int		ft_exit(void){
 	print_debug("ft_exit start\n");
