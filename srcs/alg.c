@@ -12,14 +12,14 @@ int check_connection(int dest)
     
     while (tmp_steps->next != NULL)
 	{
-        printf("room %d\n", tmp_steps->room);
+        // printf("room %d\n", tmp_steps->room);
 		if(tmp_steps->room == dest)
             return 0;
         // else if(tmp_steps->room == 0)
         //     return 0;
 		tmp_steps = tmp_steps->next;
 	}
-    printf("find dest\n");
+    // printf("find dest\n");
     return 1;
 }
 
@@ -60,14 +60,14 @@ void full_matrix(int i, int j, char a, char b)
 {
     g_sm_matrix[i][j] = a;
     g_sm_matrix[j][i] = b;
-    print_matrix(g_sm_matrix);
+    // print_matrix(g_sm_matrix);
 }
 
 int find_ch(int room, int start, char c)
 {
     for (unsigned int j = start; j < g_vars.number_of_rooms; j++)
     {
-        printf("room: %d  conn: %d, find_ch %c  %c\n", room, j, c, g_sm_matrix[room][j]);
+        // printf("room: %d  conn: %d, find_ch %c  %c\n", room, j, c, g_sm_matrix[room][j]);
         if (g_sm_matrix[room][j] == c)
             return j;
     }
@@ -77,20 +77,20 @@ int find_ch(int room, int start, char c)
 //проверка на связь с финишной точкой и на ее доступность
 int finish_check(int room)
 {
-    printf("finish_check\n");
+    // printf("finish_check\n");
     for(unsigned int i = 0; i < g_vars.list_room[room]->number_of_conn; i++)
     {
         if (g_vars.list_room[room]->conn_pointers[i]->index == (int)g_vars.number_of_rooms - 1)        
         {
-            printf("finish_check = yes\n");
+            // printf("finish_check = yes\n");
             if (find_ch(room, 0, '+') != -1)
             {
-                printf("room: %d, finish_check = 0 \n", room);
+                // printf("room: %d, finish_check = 0 \n", room);
                 return 0;
             }
             else
             {
-                printf("room: %d, finish_check = 1 \n", room);
+                // printf("room: %d, finish_check = 1 \n", room);
                 return 1;
             }
         }
@@ -170,7 +170,7 @@ int full_current_step(int room)
     //!!!! нужно будет почистить по завершении все списки - функции написаны ft_lstclear_....
     if (finish_check(room))
     {
-        printf("finish_check: OK!\n");
+        // printf("finish_check: OK!\n");
         ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(g_vars.number_of_rooms - 1, ' ', room)); //добавляем последний шаг до финиша в цепочку
         full_matrix(room, g_vars.number_of_rooms - 1, '+', ' '); //в матрице отображаем наш ход
         g_vars.number_of_ways++; //увеличиваю поличество путей
@@ -180,7 +180,7 @@ int full_current_step(int room)
     //проверка на занятость пути - если + ищется свободный -
     if (room != 0 && find_ch(room, 0,'+') != -1)
     {
-        printf("find + : OK!\n");
+        // printf("find + : OK!\n");
         return find_minus(ch, room);
         // int a = find_minus(ch, room);
         // if (a == -2)
@@ -197,8 +197,8 @@ int full_current_step(int room)
     {    
         for (unsigned int i = 0; i < g_vars.list_room[room]->number_of_conn; i++)
         {
-            printf("find connections : OK!\n");
-            printf("current room index: %d, check room index: %d, i: %d\n", room, g_vars.list_room[room]->conn_pointers[i]->index, i);
+            // printf("find connections : OK!\n");
+            // printf("current room index: %d, check room index: %d, i: %d\n", room, g_vars.list_room[room]->conn_pointers[i]->index, i);
             a = room_check(room, g_vars.list_room[room]->conn_pointers[i]->index);
             if (a == -2)
                 continue;
@@ -241,7 +241,7 @@ void alg()
         g_vars.list_room[i]->index = i;
     }
     
-    print_rooms();
+    // print_rooms();
 
     create_matrix(g_vars.number_of_rooms); // ее потом нужно будет очистить по завершени/ю алгоритма
 

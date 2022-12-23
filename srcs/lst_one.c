@@ -83,14 +83,17 @@ t_fin_ways	*ft_lstnew_one(t_step	**steps)
 
 void print_ways(t_fin_ways **g_fin_ways)
 {
-	printf("print_ways: %d\n", g_vars.number_of_ways);
+	printf("\nprint_ways: %d:\n", g_vars.number_of_ways);
 	t_fin_ways *ways = *g_fin_ways;
 	while (ways)
 	{
+		printf("\n");
 		for (int i = 0; i < ways->length_way; i++)
 		{
-			write(1, g_vars.list_room[ways->step_index[i]]->name, ft_strlen(g_vars.list_room[ways->step_index[i]]->name));
+			printf("%s\t", g_vars.list_room[ways->step_index[i]]->name);
+			// write(1, g_vars.list_room[ways->step_index[i]]->name, ft_strlen(g_vars.list_room[ways->step_index[i]]->name));
 		}
+		printf("\n");
 		ways = ways->next;
 	}
 }
