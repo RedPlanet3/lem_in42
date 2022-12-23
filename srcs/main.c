@@ -146,11 +146,8 @@ static int		ft_exit(void){
 		free(g_vars.end_room);
 	}
 
-	print_debug("ft_exit start clean list rooms. i = %d\n", i);
-	if (g_vars.list_room){
-		print_debug("ft_exit start clean this list\n");
+	if (g_vars.list_room)
 		free(g_vars.list_room);
-	}
 
 	print_debug("ft_exit finish success\n");
 	return g_vars.ret_value;
@@ -163,12 +160,15 @@ int				main(void){
 	print_debug("Main start\n");
 	
 	while((ret = get_next_line(0, &buf)) > 0) {
-		print_debug("Main gnl next iteration: %s\n", buf);
 		if (ft_parser(buf))
 			goto error;								// Free memory for error in ft_parser
 		free(buf);
 	}
-	
+	if (ret == 0){
+		if (ft_parser(buf))
+			goto error;								// Free memory for error in ft_parser
+	}
+
 	if(ft_delete_empty_rooms())
 		goto error;
 	free(buf);

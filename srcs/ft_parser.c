@@ -54,7 +54,7 @@ static int				ft_put_room_to_list(t_room *next_room){
 	if(next_room == g_vars.start_room){
 		temp[0] = next_room;
 		for(i = 1; i <= g_vars.number_of_rooms; i++)
-			temp[i] = g_vars.list_room[i];
+			temp[i] = g_vars.list_room[i - 1];
 	} else {
 		for(i = 0; i < g_vars.number_of_rooms; i++)
 			temp[i] = g_vars.list_room[i];
@@ -280,18 +280,18 @@ static t_room			*ft_get_room(char *name){
 	print_debug("ft_get_room start. str: %s\n", name);
 	t_room	*ret = NULL;
 
-	if(!ft_strcmp(g_vars.start_room->name, name)){
-		return g_vars.start_room;
-	} else if (!ft_strcmp(g_vars.end_room->name, name)){
-		return g_vars.end_room;
-	} else {
+	// if(!ft_strcmp(g_vars.start_room->name, name)){
+	// 	return g_vars.start_room;
+	// } else if (!ft_strcmp(g_vars.end_room->name, name)){
+	// 	return g_vars.end_room;
+	// } else {
 		for(unsigned int i = 0; i < g_vars.number_of_rooms; i++){
 			if (!ft_strcmp(g_vars.list_room[i]->name, name)){
 				ret = g_vars.list_room[i];
 				break;
 			}
 		}
-	}
+	// }
 
 	print_debug("ft_get_room finish success. ret - %p\n", ret);
 	return ret;
@@ -393,7 +393,6 @@ int						ft_delete_empty_rooms(void){
 	if(g_vars.start_room != NULL &&
 		(g_vars.start_room->number_of_conn == 0 ||
 		g_vars.end_room->conn_pointers == 0)){
-		print_debug("ret_flag = %d\n", g_vars.ret_value);
 		if(g_vars.ret_value == 0){
 			g_vars.err_msg = ft_strdup("start or end room don't have connectoins!");
 			g_vars.ret_value = -1;
@@ -402,7 +401,6 @@ int						ft_delete_empty_rooms(void){
 	}
 
 	while(i < g_vars.number_of_rooms){
-		print_debug("Next iteration i = %d; number_of_rooms = %d\n", i, g_vars.number_of_rooms);
 		if(g_vars.list_room[i]->number_of_conn == 0){
 			if(ft_remove_room_from_list(i))
 				goto error;
@@ -491,6 +489,13 @@ int						ft_parser(char *str){
 	print_debug("ft_parser start. str = %s\n", str);
 
 	temp = ft_strtrim(str, " \t\n");
+
+	if(ft_strlen(temp) == 0){
+		free(temp);
+		print_debug("ft_parser finish success\n");
+		return SUCCESS;
+	}
+
 	type = ft_get_type(temp);							// Get type
 	switch (type) {
 	case ANTS_NUMBER:
