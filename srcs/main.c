@@ -175,6 +175,7 @@ int				main(void){
 
 	alg();
 	print_ways(&g_fin_ways);
+	//проверить на количество путей
 
 	// if (fend_rooms_flagt_create_ways_table())
 	// 	goto exit;
