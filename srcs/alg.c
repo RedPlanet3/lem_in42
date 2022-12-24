@@ -159,20 +159,19 @@ int find_minus(int ch, int room)
 int full_current_step(int room)
 {
     int ch = 0;
-    int a;
-    // if (room == -1)
-    //     return -1;
-    // if (room == -2)
-        //шагать дальше
+    int a; 
 
     //проверка на связь с финишом и что эта связь свободна для использования - конец рекурсии
 
     //!!!! нужно будет почистить по завершении все списки - функции написаны ft_lstclear_....
-    if (finish_check(room))
+    if (finish_check(room) || room == (int)g_vars.number_of_rooms - 1)
     {
         // printf("finish_check: OK!\n");
-        ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(g_vars.number_of_rooms - 1, ' ', room)); //добавляем последний шаг до финиша в цепочку
-        full_matrix(room, g_vars.number_of_rooms - 1, '+', ' '); //в матрице отображаем наш ход
+        if (room != (int)g_vars.number_of_rooms - 1)
+        {   
+            ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(g_vars.number_of_rooms - 1, ' ', room)); //добавляем последний шаг до финиша в цепочку
+            full_matrix(room, g_vars.number_of_rooms - 1, '+', ' '); //в матрице отображаем наш ход
+        }
         g_vars.number_of_ways++; //увеличиваю поличество путей
         return -1; //код завершения
     }
@@ -182,16 +181,6 @@ int full_current_step(int room)
     {
         // printf("find + : OK!\n");
         return find_minus(ch, room);
-        // int a = find_minus(ch, room);
-        // if (a == -2)
-        // {            
-        //     rollback(room); // откат
-        //     return -2; //если нет доступных комнат откат?
-        // }
-        // else if (a == -1)
-        //     return -1;
-        // else
-        //     write(1, "check + error" , ft_strlen("check + error"));
     }
     else
     {    
@@ -204,17 +193,6 @@ int full_current_step(int room)
                 continue;
             if (a == -1)
                 return -1;
-            // if (check_connection(g_vars.list_room[room]->conn_pointers[i]->index))
-            // {                        
-            //     ft_lst_add_back_pn(g_steps, ft_lstnew_pn(g_vars.list_room[room]->conn_pointers[i]->index, '+', room)); //добавляем шаг в цепочку
-            //     full_matrix(room, g_vars.list_room[room]->conn_pointers[i]->index, '+', '-');
-            //     if (full_current_step(g_vars.list_room[room]->conn_pointers[i]->index) == -2)//может возвращать
-            //     {
-            //         rollback(room); // откат
-            //     }
-            // }
-            // else
-            //     continue;
         }
     }
     return -2;
@@ -241,11 +219,11 @@ void alg()
         g_vars.list_room[i]->index = i;
     }
     
-    // print_rooms();
+    print_rooms();
 
     create_matrix(g_vars.number_of_rooms); // ее потом нужно будет очистить по завершени/ю алгоритма
 
- 
+
 
     for (unsigned int i = 0; i < g_vars.list_room[0]->number_of_conn; i++)
     {
@@ -255,7 +233,7 @@ void alg()
         ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(g_vars.list_room[0]->conn_pointers[i]->index,' ', 0));
         
         full_matrix(0, g_vars.list_room[0]->conn_pointers[i]->index, '+', ' ');
-        
+         printf("i: %d\n", i);
         a = full_current_step(g_vars.list_room[0]->conn_pointers[i]->index);
         
         if (a == -2)
