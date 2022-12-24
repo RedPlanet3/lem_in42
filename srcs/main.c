@@ -94,9 +94,10 @@ t_vars			g_vars = {
 	.number_of_ways = 0,
 	.ret_value = 0
 };
-    t_step  		*g_steps = NULL;
-	t_fin_ways 		*g_fin_ways = NULL;
-	char 			**g_sm_matrix;
+
+t_step  		*g_steps = NULL;
+t_fin_ways 		*g_fin_ways = NULL;
+char 			**g_sm_matrix;
 
 
 static int		ft_exit(void){
@@ -169,8 +170,10 @@ int				main(void){
 			goto error;								// Free memory for error in ft_parser
 	}
 
-	if(ft_delete_empty_rooms())
+	if(ft_delete_empty_rooms()){
+		free(buf);
 		goto error;
+	}
 	free(buf);
 
 	alg();
@@ -180,10 +183,12 @@ int				main(void){
 	// if (fend_rooms_flagt_create_ways_table())
 	// 	goto exit;
 
+	if(ft_print_result())
+		goto error;
+
 	print_debug("Main finish success\n");
 	return ft_exit();
 error:
-	free(buf);
 	print_debug("Main finish with error\n");
 	return ft_exit();
 }

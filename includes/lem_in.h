@@ -34,6 +34,8 @@ typedef struct 			s_room {
 	struct s_room		**conn_pointers;	// Connect-pointer with connect-room
 	unsigned int		number_of_conn;		// Number of connections
 	int					index;
+	unsigned int		ants_inside;		// Number of ants inside
+	unsigned int		ant_name;			// The name of the ant that this inside
 }						t_room;
 
 typedef struct 			s_way {
@@ -65,7 +67,7 @@ extern t_fin_ways 		*g_fin_ways;		//структура содержащая фи
 extern t_step 			*g_steps;			//структура путей для алгоритма
 extern char 			**g_sm_matrix;		//матрица смежности
 
-
+int				ft_print_result(void);
 int				ft_delete_empty_rooms(void);
 int				ft_create_ways_table(void);
 int				ft_parser(char *str);

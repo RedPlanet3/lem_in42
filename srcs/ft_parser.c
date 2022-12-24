@@ -108,6 +108,8 @@ static t_room			*ft_create_room(char **args){
 	room->connections = NULL;
 	room->conn_pointers = NULL;
 	room->number_of_conn = 0;
+	room->ants_inside = 0;
+	room->ant_name = 0;
 	free(args[1]);
 	free(args[2]);
 	free(args);
@@ -162,6 +164,7 @@ static int				ft_get_start_room(char *str){
 		goto error;
 	if (!(g_vars.start_room = ft_create_room(list)))
 		goto error;
+	g_vars.start_room->ants_inside = g_vars.ant_number;
 
 	if(ft_put_room_to_list(g_vars.start_room))
 		goto error;
