@@ -198,11 +198,19 @@ int full_current_step(int room)
     return -2;
 }
 
-void print_rooms()
+void print_rooms(int conn)
 {
     for (int i = 0; i < (int)g_vars.number_of_rooms; i++)
     {
         printf("i: %d, room index: %d, room name: %s \n", i, g_vars.list_room[i]->index, g_vars.list_room[i]->name);
+        if (conn)
+        {
+            printf("conn_pointers:\n");
+            for (int j = 0; j < (int)g_vars.list_room[i]->number_of_conn; j++)
+            {
+                printf("i: %d, room index: %d, room name: %s \n", i, g_vars.list_room[i]->index, g_vars.list_room[i]->name);
+            }
+        }
     }
     printf("\n");
 }
@@ -219,7 +227,7 @@ void alg()
         g_vars.list_room[i]->index = i;
     }
     
-    print_rooms();
+    print_rooms(1);
 
     create_matrix(g_vars.number_of_rooms); // ее потом нужно будет очистить по завершени/ю алгоритма
 
