@@ -6,13 +6,15 @@ OBJS		= $(SRCS:.c=.o)
 
 HEADERS		= $(shell find ./srcs ./libft -type f -name "*.h")
 
-FLAGS		= -Wall -Wextra -Werror -g
+FLAGS		= -Wall -Wextra -Werror -g -v
 
 CC			= gcc
 
 LD			= ld
 
 RM			= rm -rf
+
+MAP         = maps/map_01_my
 
 .PHONY:		all clean fclean re
 
@@ -24,6 +26,8 @@ $(NAME):	$(OBJS) $(HEADERS)
 			$(CC) $(FLAGS) -o $(NAME) $(OBJS) ./includes/libft.a
 
 all:		$(NAME)
+
+run:		re ./$(NAME) $(MAP)
 
 clean:
 			(cd libft; make clean)

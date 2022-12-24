@@ -15,6 +15,7 @@
 
 t_step	*ft_lstnew_pn(int index, char old, int prev_room)
 {
+
 	t_step	*new;
 
 	new = (t_step *)ft_malloc(sizeof(t_step));
@@ -22,5 +23,6 @@ t_step	*ft_lstnew_pn(int index, char old, int prev_room)
 	new->old_ch = old;
 	new->prev_room = prev_room;
 	new->next = NULL;
+
 	return (new);
 }

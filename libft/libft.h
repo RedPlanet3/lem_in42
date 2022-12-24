@@ -16,6 +16,7 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
+#include <stdio.h>
 // # include "../includes/lem_in.h"
 
 # define BUFFER_SIZE 64
@@ -40,6 +41,7 @@ typedef struct 			s_fin_ways {
 	int					length_way;		//length way
 	struct	s_fin_ways 	*next;
 }						t_fin_ways;
+
 
 int		get_next_line(int fd, char **line);
 void	*ft_memset(void *s, int c, size_t n);

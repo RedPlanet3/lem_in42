@@ -12,16 +12,32 @@
 
 #include "libft.h"
 
+void print_lst(t_step **lst)
+{
+	t_step *back = *lst;
+	while (back)
+	{
+		printf("room: %d, prev_room: %d, old_ch: %c\n", back->room, back->prev_room, back->old_ch);
+		back = back->next;
+	}
+	
+}
 
 void	ft_lst_del_back_pn(t_step **lst)
 {
 	t_step	*back;
-	t_step	*pr;
+	t_step *tmp = *lst;
 
-	if (*lst != NULL)
-	{
-		back = ft_lstlast_pn(*lst);
-		free(back);
-		back = NULL;
+	
+
+	if (tmp->next != NULL)
+	{	
+		while (tmp->next->next)
+			tmp = tmp->next->next;
+		back = ft_lstlast_pn(tmp);
+		// printf("del %d\n", back->room);
+		if (back)
+			free(back);
+		tmp->next = NULL;
 	}
 }
