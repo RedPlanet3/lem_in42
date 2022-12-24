@@ -35,7 +35,7 @@ void	ft_lst_del_back_pn(t_step **lst)
 		while (tmp->next->next)
 			tmp = tmp->next->next;
 		back = ft_lstlast_pn(tmp);
-		// printf("del %d\n", back->room);
+		printf("del %d\n", back->room);
 		if (back)
 			free(back);
 		tmp->next = NULL;
