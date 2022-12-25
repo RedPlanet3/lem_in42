@@ -79,7 +79,7 @@ int 			find_ch(int room, int start, char c);
 int 			finish_check(int room);
 void 			rollback();
 int 			room_check(int room, int ch);
-int 			find_minus(int ch, int room);
+int 			find_minus(int room);
 int 			full_current_step(int room);
 void 			full_finish_ways(void);
 void 			alg(void);

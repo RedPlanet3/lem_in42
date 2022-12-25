@@ -97,5 +97,6 @@ int	ft_lstsize_one(t_fin_ways *lst);
 int* full_arr_int(t_step *lst, int size);
 t_fin_ways	*ft_lstlast_one(t_fin_ways *lst);
 t_fin_ways	*ft_lstnew_one(t_step	**steps);
+void print_lst(t_step **lst);
 
 #endif

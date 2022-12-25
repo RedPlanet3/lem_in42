@@ -57,6 +57,11 @@ int* full_arr_int(t_step *lst, int size)
         ch++;
 	}
     arr[ch] = lst->room;
+
+	// printf("                     WAY: ");
+	// for(int i=0; i<size;i++)
+	// 	printf("%s ",g_vars.list_room[arr[i]]->name);
+	// printf("\n");
     return arr;
 }
 

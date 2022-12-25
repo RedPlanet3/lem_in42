@@ -11,13 +11,14 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../includes/lem_in.h"
 
 void print_lst(t_step **lst)
 {
 	t_step *back = *lst;
 	while (back)
 	{
-		printf("room: %d, prev_room: %d, old_ch: %c\n", back->room, back->prev_room, back->old_ch);
+		// printf("room: %s, prev_room: %s, old_ch: %c\n", g_vars.list_room[back->room]->name, g_vars.list_room[back->prev_room]->name, back->old_ch);
 		back = back->next;
 	}
 	
@@ -25,17 +26,16 @@ void print_lst(t_step **lst)
 
 void	ft_lst_del_back_pn(t_step **lst)
 {
-	t_step	*back;
+	t_step	*back = *lst;
 	t_step *tmp = *lst;
 
-	
-
 	if (tmp->next != NULL)
-	{	
-		while (tmp->next->next)
-			tmp = tmp->next->next;
-		back = ft_lstlast_pn(tmp);
-		printf("del %d\n", back->room);
+	{
+		while (tmp->next->next != NULL)
+			tmp = tmp->next;
+		back = tmp->next;
+		print_lst(lst);
+		// printf("DEL %s\n", g_vars.list_room[back->room]->name);
 		if (back)
 			free(back);
 		tmp->next = NULL;
