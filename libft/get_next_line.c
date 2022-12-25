@@ -70,7 +70,6 @@ int				get_next_line(int fd, char **line)
 		temp = ft_strjoin(str, buf);
 		if (!temp)
 			return (fail(str));
-		write(1, "NEXT 2\n", 7);
 		ft_bzero(str, BUFFER_SIZE * 2);
 		for(int k = 0; k < (int)ft_strlen(temp); k++)
 			str[k] = temp[k];
