@@ -14,8 +14,11 @@ static void	ft_reverse_iteration(t_fin_ways *way){
 	char			*temp = NULL;
 	
 	while(curent_pos){
+		print_debug("ft_reverse_iteration %d iteration; curent_pos = %d\n", 
+					way->length_way , curent_pos);
 		if(g_vars.list_room[way->step_index[curent_pos]] == g_vars.end_room &&					// if curent_pos == end
 			g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside > 0){
+				print_debug("1\n");
 				g_vars.list_room[way->step_index[curent_pos]]->ants_inside += 1;
 				g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside -= 1;
 				temp = ft_itoa(g_vars.list_room[way->step_index[curent_pos - 1]]->ant_name);
@@ -27,6 +30,7 @@ static void	ft_reverse_iteration(t_fin_ways *way){
 		} else if (g_vars.list_room[way->step_index[curent_pos - 1]] == g_vars.start_room &&	// if curent_pos == start + 1
 					g_vars.list_room[way->step_index[curent_pos]]->ants_inside == 0 &&
 					g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside > 0) {
+				print_debug("2\n");
 				g_vars.list_room[way->step_index[curent_pos]]->ant_name
 				= g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside;
 				temp = ft_itoa(g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside);
@@ -38,6 +42,7 @@ static void	ft_reverse_iteration(t_fin_ways *way){
 				curent_pos -= 1;
 		} else if(g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside > 0 &&			// if other rooms
 					g_vars.list_room[way->step_index[curent_pos]]->ants_inside == 0) {
+				print_debug("3\n");
 				g_vars.list_room[way->step_index[curent_pos]]->ants_inside += 1;
 				g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside -= 1;
 				g_vars.list_room[way->step_index[curent_pos]]->ant_name
@@ -49,9 +54,11 @@ static void	ft_reverse_iteration(t_fin_ways *way){
 				g_vars.list_room[way->step_index[curent_pos - 1]]->ant_name = 0;
 				curent_pos -= 1;
 		} else if (g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside == 0){
+			print_debug("4\n");
 			curent_pos -= 1;
 			continue;
 		} else {																				// if traffic stop
+			print_debug("5\n");
 			ft_write_step(ft_itoa(g_vars.list_room[way->step_index[curent_pos - 1]]->ant_name),
 								"wait");
 			curent_pos -= 1;
@@ -74,6 +81,7 @@ int		ft_print_result(void){
 		goto error;
 
 	while(ant_end != g_vars.ant_number){
+	// for(int f = 0; f < 5; f++){
 		t_fin_ways *temp = g_fin_ways;
 		while (temp){
 			ft_reverse_iteration(temp);
