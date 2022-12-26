@@ -63,6 +63,9 @@ static void	ft_reverse_iteration(t_fin_ways *way){
 			// print_debug("5\n");
 			ft_write_step(ft_itoa(g_vars.list_room[way->step_index[curent_pos - 1]]->ant_name),
 								"wait");
+
+
+			exit(1);
 			curent_pos -= 1;
 		}
 	}

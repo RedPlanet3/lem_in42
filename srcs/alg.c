@@ -97,7 +97,7 @@ int find_ch(int room, int start, char c)
 }
 
 //проверка на связь с финишной точкой и на ее доступность
-int finish_check(int room)
+int finish_check(int prew, int room)
 {
     for(unsigned int i = 0; i < g_vars.list_room[room]->number_of_conn; i++)
     {
@@ -105,6 +105,7 @@ int finish_check(int room)
         {
             if (find_ch(room, 0, '+') != -1)
             {
+                find_minus(prew, room);
                 // printf("room: %d finish not actual \n", room);
                 return 0;
             }
@@ -130,7 +131,7 @@ int search_last_room(int num)
 //  откат до предыдущего состояние
 //  1. отмена проставления знаков в матрице смежности
 //  2. удаление комнаты из steps
-void rollback()
+void rollback(int prew, int room)
 {
     // printf("Matrix before del:\n");
     // print_matrix(g_sm_matrix);
@@ -143,8 +144,10 @@ void rollback()
     // printf("del_step: %s, list: ", g_vars.list_room[del_step->room]->name);
 
     // if (del_step->old_ch == ' ')
-    int prew = search_last_room(count-1);
-    int room = search_last_room(count);
+
+
+    // int prew = search_last_room(count-1);
+    // int room = search_last_room(count);
     if (g_sm_matrix[prew][room] == '+')
         full_matrix(prew, room, ' ', ' ');
 
@@ -163,29 +166,29 @@ void rollback()
 }
 
 //возврат -2 - если проверка связи неудачная
-int room_check(int room, int ch)
+int room_check(int prew, int room)
 {
-    if (check_connection(ch))           // проверяем, можем ли мы использовать эту связь
+    if (check_connection(room))           // проверяем, можем ли мы использовать эту связь
     {
         // ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(ch, g_sm_matrix[room][ch], room)); //добавляем шаг в цепочку
-        g_cur_rooms[ch] = ++count;
-        if (g_sm_matrix[room][ch] == '-')
+        g_cur_rooms[room] = ++count;
+        if (g_sm_matrix[prew][room] == '-')
         {
-            // printf("g_sm_matrix[room][ch] == '-'\n");
-            full_matrix(room, ch, ' ', ' ');
+            // printf("g_sm_matrix[room][room] == '-'\n");
+            full_matrix(prew, room, ' ', ' ');
         }
-        else if (g_sm_matrix[room][ch] == ' ')
+        else if (g_sm_matrix[prew][room] == ' ')
         {
-            // printf("g_sm_matrix[room][ch] == ' '\n");
-            full_matrix(room, ch, '+', '-');
+            // printf("g_sm_matrix[room][room] == ' '\n");
+            full_matrix(prew, room, '+', '-');
         }
         // print_matrix(g_sm_matrix);
-        return(full_current_step(ch));     //может возвращать
+        return(full_current_step(prew, room));     //может возвращать
     }
     return -3;
 }
 
-int find_minus(int room)
+int find_minus(int prew, int room)
 {
     // printf("start find_minus\n");
     int ch = 0;
@@ -210,7 +213,7 @@ int find_minus(int room)
         else if (a == -2)
         {
             // printf("need rollback\n");
-            rollback();
+            rollback(room, ch);
             
         }
         ch = find_ch(room, ch + 1, '-');
@@ -218,7 +221,7 @@ int find_minus(int room)
     }
     // printf("find_minus return -2\n");
     // printf("need rollback\n");
-    rollback();
+    rollback(prew, room);
     return -2; // не найдена следующая комната
 }
 
@@ -233,14 +236,14 @@ int find_minus(int room)
 //если есть "+" у назначении проверяются только доступные "-" - далее необходимо будет заменить данные в ячейках - скомпенсировать пути
 //необходимо сравнивать место назначения с уже посещенной комнатой
 //
-int full_current_step(int room)
+int full_current_step(int prew, int room)
 {
     int a; 
 
     //проверка на связь с финишом и что эта связь свободна для использования - конец рекурсии
 
     //!!!! нужно будет почистить по завершении все списки - функции написаны ft_lstclear_....
-    if (finish_check(room) || room == (int)g_vars.number_of_rooms - 1)
+    if (finish_check(prew, room) || room == (int)g_vars.number_of_rooms - 1)
     {
         // printf("finish_check: OK!\n");
         if (room != (int)g_vars.number_of_rooms - 1)
@@ -258,7 +261,7 @@ int full_current_step(int room)
     if (room != 0 && find_ch(room, 0,'+') != -1)
     {
         // printf("find + : OK!\n");
-        return find_minus(room);
+        return find_minus(prew, room);
     }
     else
     {    
@@ -275,7 +278,7 @@ int full_current_step(int room)
         }
     }
     // printf("full_current_step return -2\n");
-    rollback();
+    rollback(prew, room);
     return -2;
 }
 
@@ -337,9 +340,7 @@ void alg()
     g_vars.number_of_ways = 0;
     
     for(unsigned int i = 0; i < g_vars.number_of_rooms; i++)
-    {
         g_vars.list_room[i]->index = i;
-    }
     
     // print_rooms(1);//0 - печать комнаты, +печать связи - 1
 
@@ -359,10 +360,10 @@ void alg()
         full_matrix(0, g_vars.list_room[0]->conn_pointers[i]->index, '+', ' ');
         // print_matrix(g_sm_matrix);
         //  printf("i: %d\n", i);
-        a = full_current_step(g_vars.list_room[0]->conn_pointers[i]->index);
+        a = full_current_step(0, g_vars.list_room[0]->conn_pointers[i]->index);
         
         if (a == -2)
-            rollback();
+            rollback(0, g_vars.list_room[0]->conn_pointers[i]->index);
         // if (a == -1)
             // ft_lst_add_back_one(&g_fin_ways, ft_lstnew_one(&g_steps));
 
