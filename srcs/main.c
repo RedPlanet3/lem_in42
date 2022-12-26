@@ -98,7 +98,7 @@ t_vars			g_vars = {
 t_step  		*g_steps = NULL;
 t_fin_ways 		*g_fin_ways = NULL;
 char 			**g_sm_matrix;
-short			*g_cur_rooms;
+char			*g_cur_rooms;
 
 
 static int		ft_exit(void){
@@ -150,6 +150,8 @@ static int		ft_exit(void){
 
 	if (g_vars.list_room)
 		free(g_vars.list_room);
+	
+	ft_lstclear_one(&g_fin_ways);
 
 	print_debug("ft_exit finish success\n");
 	return g_vars.ret_value;

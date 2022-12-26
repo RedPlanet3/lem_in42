@@ -57,11 +57,6 @@ int* full_arr_int(t_step *lst, int size)
         ch++;
 	}
     arr[ch] = lst->room;
-
-	// printf("                     WAY: ");
-	// for(int i=0; i<size;i++)
-	// 	printf("%s ",g_vars.list_room[arr[i]]->name);
-	// printf("\n");
     return arr;
 }
 
@@ -85,22 +80,3 @@ t_fin_ways	*ft_lstnew_one(t_step	**steps)
 	new->next = NULL;
 	return (new);
 }
-
-void print_ways(t_fin_ways **g_fin_ways)
-{
-	printf("\nprint_ways: %d:\n", g_vars.number_of_ways);
-	t_fin_ways *ways = *g_fin_ways;
-	while (ways)
-	{
-		printf("\n");
-		for (int i = 0; i < ways->length_way; i++)
-		{
-			printf("%s\t", g_vars.list_room[ways->step_index[i]]->name);
-			// write(1, g_vars.list_room[ways->step_index[i]]->name, ft_strlen(g_vars.list_room[ways->step_index[i]]->name));
-		}
-		printf("\n");
-		ways = ways->next;
-	}
-}
-
-

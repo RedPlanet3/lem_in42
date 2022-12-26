@@ -66,7 +66,7 @@ extern t_vars			g_vars;				// Global struct of variables
 extern t_fin_ways 		*g_fin_ways;		//структура содержащая финальные пути
 extern t_step 			*g_steps;			//структура путей для алгоритма
 extern char 			**g_sm_matrix;		//матрица смежности
-extern short*			g_cur_rooms;
+extern char*			g_cur_rooms;
 
 int				ft_print_result(void);
 int				ft_delete_empty_rooms(void);
