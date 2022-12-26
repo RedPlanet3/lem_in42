@@ -114,7 +114,7 @@ void rollback()
     // print_matrix(g_sm_matrix);
     // print_lst(&g_steps);
     t_step *del_step = ft_lstlast_pn(g_steps);
-    // printf("del_step: %s\n", g_vars.list_room[del_step->room]->name);
+    // printf("del_step: %s, list: ", g_vars.list_room[del_step->room]->name);
     if (del_step->old_ch == ' ')
         full_matrix(del_step->prev_room, del_step->room, ' ', ' ');
     else if (del_step->old_ch == '-')
@@ -236,6 +236,8 @@ int full_current_step(int room)
                 return -1;
         }
     }
+    // printf("full_current_step return -2\n");
+    rollback();
     return -2;
 }
 
@@ -326,5 +328,5 @@ void alg()
     // printf("FINISH MATRIX:\n");
     // print_matrix(g_sm_matrix);
     finish_ways();
-    // clean_matrix();
+    clean_matrix();
 }
