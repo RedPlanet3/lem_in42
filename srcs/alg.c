@@ -2,26 +2,31 @@
 
 // t_step **steps;
 // char **g_sm_matrix;
+int count;
 
 
 // Проверка на использованные кормнаты в пути и на возврат в старт
 // 0 - связь использовать нельзя
 int check_connection(int dest) 
 {
-    t_step *tmp_steps = g_steps;
+    if (g_cur_rooms[dest] != -1)
+        return 0;
+    else
+        return 1;
+    // t_step *tmp_steps = g_steps;
     
-    while (tmp_steps->next != NULL)
-	{
+    // while (tmp_steps->next != NULL)
+	// {
         
-		if(tmp_steps->room == dest)
-            return 0;
-        // else if(tmp_steps->room == 0)
-        //     return 0;
-		tmp_steps = tmp_steps->next;
-	}
-    // printf("next room %s\n", g_vars.list_room[dest]->name);
-    // printf("find dest\n");
-    return 1;
+	// 	if(tmp_steps->room == dest)
+    //         return 0;
+    //     // else if(tmp_steps->room == 0)
+    //     //     return 0;
+	// 	tmp_steps = tmp_steps->next;
+	// }
+    // // printf("next room %s\n", g_vars.list_room[dest]->name);
+    // // printf("find dest\n");
+    // return 1;
 }
 
 void create_matrix(unsigned int number_of_rooms)
@@ -35,6 +40,14 @@ void create_matrix(unsigned int number_of_rooms)
             g_sm_matrix[i][j] = ' ';
         }
     }
+}
+
+void g_cur_rooms_create(unsigned int number_of_rooms, int create)
+{
+    if (create)
+        g_cur_rooms = (short*)malloc(number_of_rooms * sizeof(short));
+    for (unsigned int j = 0; j < number_of_rooms; j++)
+        g_cur_rooms[j] = -1;
 }
 
 void print_matrix(char **matrix)
@@ -105,6 +118,15 @@ int finish_check(int room)
     return 0;
 }
 
+int search_last_room(int num)
+{    
+    for (unsigned int i = 0; i < g_vars.number_of_rooms; i++)
+    {        
+        if (g_cur_rooms[i] == num)
+            return i;
+    }
+    return -1;
+}
 //  откат до предыдущего состояние
 //  1. отмена проставления знаков в матрице смежности
 //  2. удаление комнаты из steps
@@ -113,14 +135,28 @@ void rollback()
     // printf("Matrix before del:\n");
     // print_matrix(g_sm_matrix);
     // print_lst(&g_steps);
-    t_step *del_step = ft_lstlast_pn(g_steps);
+
+
+    // t_step *del_step = ft_lstlast_pn(g_steps);
+
+
     // printf("del_step: %s, list: ", g_vars.list_room[del_step->room]->name);
-    if (del_step->old_ch == ' ')
-        full_matrix(del_step->prev_room, del_step->room, ' ', ' ');
-    else if (del_step->old_ch == '-')
-        full_matrix(del_step->prev_room, del_step->room, '-', '+');
+
+    // if (del_step->old_ch == ' ')
+    int prew = search_last_room(count-1);
+    int room = search_last_room(count);
+    if (g_sm_matrix[prew][room] == '+')
+        full_matrix(prew, room, ' ', ' ');
+
+    // else if (del_step->old_ch == '-')
+    else if (g_sm_matrix[prew][room] == ' ')
+        full_matrix(prew, room, '-', '+');
     // printf("dell back\n");
-    ft_lst_del_back_pn(&g_steps);
+
+    // ft_lst_del_back_pn(&g_steps);
+
+    g_cur_rooms[room] = -1;
+    count--;
     // printf("Matrix after del:\n");
     // print_matrix(g_sm_matrix);
     // print_lst(&g_steps);
@@ -131,7 +167,8 @@ int room_check(int room, int ch)
 {
     if (check_connection(ch))           // проверяем, можем ли мы использовать эту связь
     {
-        ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(ch, g_sm_matrix[room][ch], room)); //добавляем шаг в цепочку
+        // ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(ch, g_sm_matrix[room][ch], room)); //добавляем шаг в цепочку
+        g_cur_rooms[ch] = ++count;
         if (g_sm_matrix[room][ch] == '-')
         {
             // printf("g_sm_matrix[room][ch] == '-'\n");
@@ -208,7 +245,8 @@ int full_current_step(int room)
         // printf("finish_check: OK!\n");
         if (room != (int)g_vars.number_of_rooms - 1)
         {   
-            ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(g_vars.number_of_rooms - 1, ' ', room)); //добавляем последний шаг до финиша в цепочку
+            // ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(g_vars.number_of_rooms - 1, ' ', room)); //добавляем последний шаг до финиша в цепочку
+            g_cur_rooms[g_vars.number_of_rooms - 1] = ++count;
             full_matrix(room, g_vars.number_of_rooms - 1, '+', ' '); //в матрице отображаем наш ход
         }
         g_vars.number_of_ways++; //увеличиваю поличество путей
@@ -266,6 +304,7 @@ void finish_ways()
     while (room != -1)
     {
         ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(0,' ', 0));
+        
         if (room != -1)
             g_sm_matrix[0][room] = ' ';
         while (room != -1)
@@ -282,16 +321,17 @@ void finish_ways()
 
 void clean_matrix()
 {
-    
     for (unsigned int i = 0; i < g_vars.number_of_rooms; i++)
     {
         free(g_sm_matrix[i]);
     }
     free(g_sm_matrix);
+    free(g_cur_rooms);
 }
 
 void alg()
 {
+    
     printf("start alg\n");
     int a;
     g_vars.number_of_ways = 0;
@@ -304,16 +344,18 @@ void alg()
     // print_rooms(1);//0 - печать комнаты, +печать связи - 1
 
     create_matrix(g_vars.number_of_rooms); // ее потом нужно будет очистить по завершени/ю алгоритма
-
+    g_cur_rooms_create(g_vars.number_of_rooms, 1);
 
 
     for (unsigned int i = 0; i < g_vars.list_room[0]->number_of_conn; i++)
     {
-       
-        ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(0,' ', 0));
+       count = -1;
+        // ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(0,' ', 0));
+        g_cur_rooms[0] = ++count;
         // print_matrix(g_sm_matrix);
 
-        ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(g_vars.list_room[0]->conn_pointers[i]->index,' ', 0));
+        // ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(g_vars.list_room[0]->conn_pointers[i]->index,' ', 0));
+        g_cur_rooms[i] = ++count;
         full_matrix(0, g_vars.list_room[0]->conn_pointers[i]->index, '+', ' ');
         // print_matrix(g_sm_matrix);
         //  printf("i: %d\n", i);
@@ -323,7 +365,9 @@ void alg()
             rollback();
         // if (a == -1)
             // ft_lst_add_back_one(&g_fin_ways, ft_lstnew_one(&g_steps));
-        ft_lstclear_pn(&g_steps);
+
+        // ft_lstclear_pn(&g_steps);
+        g_cur_rooms_create(g_vars.number_of_rooms, 0);
     }
     // printf("FINISH MATRIX:\n");
     // print_matrix(g_sm_matrix);

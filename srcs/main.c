@@ -98,6 +98,7 @@ t_vars			g_vars = {
 t_step  		*g_steps = NULL;
 t_fin_ways 		*g_fin_ways = NULL;
 char 			**g_sm_matrix;
+short			*g_cur_rooms;
 
 
 static int		ft_exit(void){
@@ -183,8 +184,8 @@ int				main(void){
 	// if (fend_rooms_flagt_create_ways_table())
 	// 	goto exit;
 
-	if(ft_print_result())
-		goto error;
+	// if(ft_print_result())
+	// 	goto error;
 
 	print_debug("Main finish success\n");
 	return ft_exit();

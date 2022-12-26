@@ -39,6 +39,8 @@ void	ft_lst_del_back_pn(t_step **lst)
 		
 		// printf("DEL %s", g_vars.list_room[back->room]->name);
 		// print_lst(lst);
+		// printf("\n");
+		g_cur_rooms[g_vars.list_room[back->room]->index] = 0;
 		if (back)
 			free(back);
 		tmp->next = NULL;
