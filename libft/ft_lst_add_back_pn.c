@@ -18,7 +18,6 @@ void	ft_lst_add_back_pn(t_step **lst, t_step *new)
 {
 	t_step	*back;
 	
-	// printf("add: %s, list: ", g_vars.list_room[new->room]->name);
 	if (*lst != NULL)
 	{
 		back = ft_lstlast_pn(*lst);
@@ -26,5 +25,4 @@ void	ft_lst_add_back_pn(t_step **lst, t_step *new)
 	}
 	else
 		*lst = new;
-	// printf("\n");
 }

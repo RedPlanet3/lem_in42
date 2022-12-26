@@ -6,22 +6,12 @@ int count;
 // 0 - связь использовать нельзя
 int check_connection(int dest) 
 {
-    // printf("%s heck_connection: '%c' ", g_vars.list_room[dest]->name, g_cur_rooms[dest]);
     if(dest == 0)
-    {
-        // printf("return 0\n");
         return 0;
-    }
     else if (g_cur_rooms[dest] == ' ')
-    {
-        // printf("return 1\n");
         return 1;
-    }
     else
-    {
-        // printf("return 0\n");
         return 0;
-    }
 }
 
 void create_matrix(unsigned int number_of_rooms)
@@ -63,25 +53,17 @@ int find_ch(int room, int start, char c)
 
 int finish_check(int prew, int room)
 {
-    // printf("finish_check(%s, %s)", g_vars.list_room[prew]->name, g_vars.list_room[room]->name);
     (void)prew;
     for(unsigned int i = 0; i < g_vars.list_room[room]->number_of_conn; i++)
     {
         if (g_vars.list_room[room]->conn_pointers[i]->index == (int)g_vars.number_of_rooms - 1)        
         {
             if (find_ch(room, 0, '+') != -1)
-            {
-                // printf("\tno\n");
                 return 0;
-            }
             else
-            {
-                // printf("\tyes\n");
                 return 1;
-            }
         }
     }
-    // printf("\tno\n");
     return 0;
 }
 
@@ -89,7 +71,6 @@ void rollback(int prew, int room)
 {
     if (g_cur_rooms[room] != '-')
     {    
-        // printf("del: %s\n", g_vars.list_room[room]->name);
         if (g_sm_matrix[prew][room] == '+')
             full_matrix(prew, room, ' ', ' ');
 
@@ -102,11 +83,8 @@ void rollback(int prew, int room)
 
 int room_check(int prew, int room)
 {
-    // printf("room_check(%s, %s)", g_vars.list_room[prew]->name, g_vars.list_room[room]->name);
     if (check_connection(room))           // проверяем, можем ли мы использовать эту связь
     {
-        // printf("\tok!\n");
-        // printf("room_check add: %s\n", g_vars.list_room[room]->name);
         g_cur_rooms[room] = '+';
         if (g_sm_matrix[prew][room] == '-')
             full_matrix(prew, room, ' ', ' ');
@@ -114,7 +92,6 @@ int room_check(int prew, int room)
             full_matrix(prew, room, '+', '-');
         return(full_current_step(prew, room));     //может возвращать
     }
-    // printf("\tno!\n");
     return -3;
 }
 
@@ -125,11 +102,9 @@ int find_minus(int prew, int room)
     
     while (ch != -1)
     {
-        // printf("find_minus(%s, %s)", g_vars.list_room[prew]->name, g_vars.list_room[room]->name);
         ch = find_ch(room, ch, '-');
         if (ch == -1)
             continue;
-        // printf("\tyes\n");
         a = room_check(room, ch);
         if (a == -1)
             return -1;
@@ -137,14 +112,12 @@ int find_minus(int prew, int room)
             rollback(room, ch);
         ch = find_ch(room, ch + 1, '-');
     }
-    // printf("\tno\n");
     rollback(prew, room);
     return -2; // не найдена следующая комната
 }
 
 int full_current_step(int prew, int room)
 {
-    // printf("full_current_step(%s, %s)\n", g_vars.list_room[prew]->name, g_vars.list_room[room]->name);
     int a;
     if (room == 0)
     {
@@ -157,7 +130,6 @@ int full_current_step(int prew, int room)
         if (room != (int)g_vars.number_of_rooms - 1)
         {   
             g_cur_rooms[g_vars.number_of_rooms - 1] = '+';
-            // printf("full_current_step, finish_check, add: %s\n", g_vars.list_room[g_vars.number_of_rooms - 1]->name);
             full_matrix(room, g_vars.number_of_rooms - 1, '+', ' '); //в матрице отображаем наш ход
         }
         g_vars.number_of_ways++; //увеличиваю поличество путей
@@ -195,9 +167,7 @@ void finish_ways()
         while (room != -1)
         {
             ft_lst_add_back_pn(&g_steps, ft_lstnew_pn(room,' ', 0));
-            // printf("room %s search '+' and find in ", g_vars.list_room[room]->name);
             room = find_ch(room, 0, '+');
-            // printf("%s\n", g_vars.list_room[room]->name);
         }
         ft_lst_add_back_one(&g_fin_ways, ft_lstnew_one(&g_steps));
         ft_lstclear_pn(&g_steps);
@@ -217,7 +187,6 @@ void clean_matrix()
 
 void alg()
 {
-    // printf("start alg\n");
     int a;
     g_vars.number_of_ways = 0;
     
@@ -228,21 +197,14 @@ void alg()
     g_cur_rooms_create(g_vars.number_of_rooms, 1);
     for (unsigned int i = 0; i < g_vars.list_room[0]->number_of_conn; i++)
     {
-        // printf("0 to %s\n", g_vars.list_room[0]->conn_pointers[i]->name); /////
         g_cur_rooms[0] = '+';
-        // printf("alg, 0, add: %s\n", g_vars.list_room[0]->name);
         g_cur_rooms[g_vars.list_room[0]->conn_pointers[i]->index] = '+';
-        // printf("alg, 1, add: %s\n", g_vars.list_room[0]->conn_pointers[i]->name);
-        
         full_matrix(0, g_vars.list_room[0]->conn_pointers[i]->index, '+', ' ');
-        
         a = full_current_step(0, g_vars.list_room[0]->conn_pointers[i]->index);
         if (a == -2)
             rollback(0, g_vars.list_room[0]->conn_pointers[i]->index);
         g_cur_rooms_create(g_vars.number_of_rooms, 0);
     }
-    // printf("FINISH MATRIX:\n");
-    // print_matrix(g_sm_matrix);
     finish_ways();
     clean_matrix();
 }

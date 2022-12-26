@@ -18,12 +18,9 @@ void print_lst(t_step **lst)
 	t_step *back = *lst;
 	while (back)
 	{
-		printf("%s ", g_vars.list_room[back->room]->name);
-		// printf("room: %s, prev_room: %s, old_ch: %c\n", g_vars.list_room[back->room]->name, g_vars.list_room[back->prev_room]->name, back->old_ch);
+		ft_putstr_fd(g_vars.list_room[back->room]->name, 1);
 		back = back->next;
 	}
-	printf("\n");
-	
 }
 
 void	ft_lst_del_back_pn(t_step **lst)
@@ -37,8 +34,6 @@ void	ft_lst_del_back_pn(t_step **lst)
 			tmp = tmp->next;
 		back = tmp->next;
 		
-		// printf("DEL %s", g_vars.list_room[back->room]->name);
-		// printf("\n");
 		g_cur_rooms[g_vars.list_room[back->room]->index] = 0;
 		if (back)
 			free(back);
