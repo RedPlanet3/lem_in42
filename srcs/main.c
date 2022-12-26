@@ -178,14 +178,14 @@ int				main(void){
 	free(buf);
 
 	alg();
-	print_ways(&g_fin_ways);
+	// print_ways(&g_fin_ways);
 	//проверить на количество путей
 
 	// if (fend_rooms_flagt_create_ways_table())
 	// 	goto exit;
 
-	// if(ft_print_result())
-	// 	goto error;
+	if(ft_print_result())
+		goto error;
 
 	print_debug("Main finish success\n");
 	return ft_exit();
