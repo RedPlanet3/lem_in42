@@ -177,15 +177,19 @@ void finish_ways()
 
 void clean_matrix()
 {
-    for (unsigned int i = 0; i < g_vars.number_of_rooms; i++)
-    {
-        free(g_sm_matrix[i]);
+    if(g_sm_matrix != NULL)
+    {    
+        for (unsigned int i = 0; i < g_vars.number_of_rooms; i++)
+        {
+            free(g_sm_matrix[i]);
+        }
+        free(g_sm_matrix);
     }
-    free(g_sm_matrix);
-    free(g_cur_rooms);
+    if (g_cur_rooms != NULL)
+        free(g_cur_rooms);
 }
 
-void alg()
+void ft_alg()
 {
     int a;
     g_vars.number_of_ways = 0;
@@ -205,6 +209,8 @@ void alg()
             rollback(0, g_vars.list_room[0]->conn_pointers[i]->index);
         g_cur_rooms_create(g_vars.number_of_rooms, 0);
     }
+    if (g_vars.visio)
+        ft_print_matrix(g_sm_matrix);
     finish_ways();
     clean_matrix();
 }

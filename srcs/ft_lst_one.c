@@ -9,8 +9,11 @@ void	ft_lstclear_one(t_fin_ways **lst)
 		buf = *lst;
 		*lst = (*lst)->next;
 
-        free(buf->step_index);
-		free(buf);
+        // if (buf != NULL)
+		// {		
+			free(buf->step_index);
+			free(buf);
+		// }
 	}
 }
 

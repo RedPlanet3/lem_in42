@@ -58,6 +58,7 @@ typedef struct 			s_vars {
 	unsigned int		number_of_rooms;	// Number of rooms
 	t_way				**list_ways;		// List ways piinter
 	unsigned int		number_of_ways;		// Number of ways
+	int					visio;				//	visualisation
 }						t_vars;
 
 
@@ -72,7 +73,7 @@ int				ft_print_result(void);
 int				ft_delete_empty_rooms(void);
 int				ft_create_ways_table(void);
 int				ft_parser(char *str);
-int				main(void);
+int				main(int ac, char **av);
 int 			check_connection(int dest);
 void 			create_matrix(unsigned int number_of_rooms);
 void 			full_matrix(int i, int j, char a, char b);
@@ -82,8 +83,9 @@ void 			rollback(int prew, int room);
 int 			room_check(int room, int ch);
 int 			find_minus(int prew, int room);
 int 			full_current_step(int prew, int room);
-void 			full_finish_ways(void);
-void 			alg(void);
-void			print_ways(t_fin_ways **g_fin_ways);
+void 			finish_ways(void);
+void 			ft_alg(void);
+void			ft_print_ways(t_fin_ways **g_fin_ways);
+void 			ft_print_matrix(char **matrix);
 
 #endif
