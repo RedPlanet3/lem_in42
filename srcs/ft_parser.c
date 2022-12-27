@@ -22,9 +22,12 @@ static enum str_type	ft_get_type(char *str){
 		return return_type = ROOM_CONN;
 	}
 
-	temp = ft_strdup("Bad map: ");
-	g_vars.err_msg = ft_strjoin(temp, str);
-	free(temp);
+	if(!g_vars.ret_value){
+		temp = ft_strdup("Bad map: ");
+		g_vars.err_msg = ft_strjoin(temp, str);
+		g_vars.ret_value = -1;
+		free(temp);
+	}
 
 	print_debug("ft_get_type finish with ERROR\n");
 	g_vars.ret_value = -1;
@@ -69,8 +72,10 @@ static int				ft_put_room_to_list(t_room *next_room){
 	return SUCCESS;
 error:
 	print_debug("ft_put_room_to_list finish with ERROR\n");
-	g_vars.err_msg = ft_strdup("malloc error");
-	g_vars.ret_value = -1;
+	if(!g_vars.ret_value){
+		g_vars.err_msg = ft_strdup("malloc error");
+		g_vars.ret_value = -1;
+	}
 
 	return ERROR;
 }
@@ -78,6 +83,9 @@ error:
 static int				ft_preatoi_checker(char *str){
 	print_debug("ft_preatoi_checker start. str: %s\n", str);
 	size_t	size = ft_strlen(str);
+
+	if(ft_strlen(str) > 9)
+		goto error;
 
 	for(unsigned long i = 0; i < size; i++)
 		if(!ft_isdigit(str[i]))
@@ -87,6 +95,10 @@ static int				ft_preatoi_checker(char *str){
 	return SUCCESS;
 error:
 	print_debug("ft_preatoi_checker finish with error\n");
+	if(!g_vars.ret_value){
+		g_vars.err_msg = ft_strdup("Count of ants too high.");
+		g_vars.ret_value = -1;
+	}
 	return ERROR;
 }
 
@@ -125,6 +137,7 @@ static t_room			*ft_create_room(char **args){
 
 	if(!(room = (t_room *)malloc(sizeof(t_room)))){
 		g_vars.err_msg = ft_strdup("malloc error");
+		g_vars.ret_value = -1;
 		goto error;
 	}
 
@@ -219,15 +232,18 @@ static int				ft_get_start_room(char *str){
 	print_debug("ft_get_start_room finish success\n");
 	return SUCCESS;
 
-error:
-	{char *temp = ft_strdup("Bad map: ");
-	g_vars.err_msg = ft_strjoin(temp, str);
-	g_vars.ret_value = -1;
-	// free(str);
-	free(temp);
+error: {
+	if(!g_vars.ret_value){
+		char *temp = ft_strdup("Bad map: ");
+		g_vars.err_msg = ft_strjoin(temp, str);
+		g_vars.ret_value = -1;
+		// free(str);
+		free(temp);
+	}
 
 	print_debug("ft_get_start_room finish with ERROR\n");
-	return ERROR;	}										// Bad str
+	return ERROR;										// Bad str
+	}
 }
 
 static int				ft_get_end_room(char *str){
@@ -257,12 +273,14 @@ static int				ft_get_end_room(char *str){
 	print_debug("ft_get_end_room finish success\n");
 	return SUCCESS;
 
-error:
-{	char *temp = ft_strdup("Bad map: ");
-	g_vars.err_msg = ft_strjoin(temp, str);
-	g_vars.ret_value = -1;
-	// free(str);
-	free(temp);
+error: {
+	if(!g_vars.ret_value){
+		char *temp = ft_strdup("Bad map: ");
+		g_vars.err_msg = ft_strjoin(temp, str);
+		g_vars.ret_value = -1;
+		// free(str);
+		free(temp);
+	}
 
 	print_debug("ft_get_end_room finish with ERROR\n");
 	return ERROR;		
@@ -314,16 +332,17 @@ success:
 	print_debug("ft_add_room finish success\n");
 	return SUCCESS;
 
-error:
-{	char *tmp = ft_strdup("Bad map: ");
-	g_vars.err_msg = ft_strjoin(tmp, str);
-	g_vars.ret_value = -1;
-	// free(str);
-	free(tmp);
+error: {
+	if(!g_vars.ret_value){
+		char *tmp = ft_strdup("Bad map: ");
+		g_vars.err_msg = ft_strjoin(tmp, str);
+		g_vars.ret_value = -1;
+		free(tmp);
+	}
 
 	print_debug("ft_add_room finish with ERROR\n");
 	return ERROR;										// Bad str
-}
+	}
 }
 
 static t_room			*ft_get_room(char *name){
@@ -404,8 +423,10 @@ success:
 error:
 	free(room_name);
 	print_debug("ft_add_one_connection end with ERROR\n");
-	g_vars.err_msg = ft_strdup("malloc error");
-	g_vars.ret_value = -1;
+	if(!g_vars.ret_value){
+		g_vars.err_msg = ft_strdup("malloc error");
+		g_vars.ret_value = -1;
+	}
 	return ERROR;
 }
 
@@ -440,10 +461,11 @@ int						ft_delete_empty_rooms(void){
 	print_debug("ft_delete_empty_rooms start\n");
 	unsigned int	i = 0;
 
+
 	if(g_vars.start_room != NULL &&
 		(g_vars.start_room->number_of_conn == 0 ||
 		g_vars.end_room->conn_pointers == 0)){
-		if(g_vars.ret_value == 0){
+		if(!g_vars.ret_value){
 			g_vars.err_msg = ft_strdup("start or end room don't have connectoins!");
 			g_vars.ret_value = -1;
 		}
@@ -457,6 +479,14 @@ int						ft_delete_empty_rooms(void){
 			continue;
 		}
 		i++;
+	}
+
+	if(g_vars.number_of_rooms == 0){
+		if(!g_vars.ret_value){
+			g_vars.err_msg = ft_strdup("No rooms or no connections\n");
+			g_vars.ret_value = -1;
+		}
+		goto error;
 	}
 
 	print_debug("ft_parser finish success\n");
