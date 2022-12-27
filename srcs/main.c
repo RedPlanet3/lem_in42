@@ -92,13 +92,14 @@ t_vars			g_vars = {
 	.number_of_rooms = 0,
 	.list_ways = NULL,
 	.number_of_ways = 0,
-	.ret_value = 0
+	.ret_value = 0,
+	.visio = 0
 };
 
 t_step  		*g_steps = NULL;
 t_fin_ways 		*g_fin_ways = NULL;
-char 			**g_sm_matrix;
-char			*g_cur_rooms;
+char 			**g_sm_matrix = NULL;
+char			*g_cur_rooms = NULL;
 
 
 static int		ft_exit(void){
@@ -170,9 +171,13 @@ static int		ft_exit(void){
 	return g_vars.ret_value;
 }
 
-int				main(void){
+int				main(int ac, char **av){
 	int			ret;
 	char		*buf;
+
+	if(ac > 1)
+{		if(!ft_strcmp (av[1],"-v"))
+			g_vars.visio = 1;}
 
 	print_debug("Main start\n");
 	
@@ -194,9 +199,9 @@ int				main(void){
 	}
 	free(buf);
 
-	alg();
-	// print_ways(&g_fin_ways);
-	//проверить на количество путей
+	ft_alg();
+	if (g_vars.visio)
+		ft_print_ways(&g_fin_ways);
 
 	// if (fend_rooms_flagt_create_ways_table())
 	// 	goto exit;
@@ -204,6 +209,7 @@ int				main(void){
 	if(ft_print_result())
 		goto error;
 
+	// sleep(3); //for tests
 	print_debug("Main finish success\n");
 	return ft_exit();
 error:
