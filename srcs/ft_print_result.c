@@ -20,22 +20,30 @@ static void	ft_reverse_iteration(t_fin_ways *way){
 			g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside > 0){
 				// print_debug("1\n");
 				temp = g_vars.list_room[way->step_index[curent_pos - 1]] == g_vars.start_room
-					? ft_itoa(g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside)
+					? ft_itoa(g_vars.ant_number
+						- g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside
+						+ 1)
 					: ft_itoa(g_vars.list_room[way->step_index[curent_pos - 1]]->ant_name);
 				ft_write_step(temp,
 								g_vars.list_room[way->step_index[curent_pos]]->name);
 				free(temp);
 				g_vars.list_room[way->step_index[curent_pos]]->ants_inside += 1;
 				g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside -= 1;
-				g_vars.list_room[way->step_index[curent_pos - 1]]->ant_name = 0;
+				(g_vars.list_room[way->step_index[curent_pos - 1]] == g_vars.start_room)
+					? (g_vars.start_room->ant_name -= 1)
+					: (g_vars.list_room[way->step_index[curent_pos - 1]]->ant_name = 0);
 				curent_pos -= 1;
 		} else if (g_vars.list_room[way->step_index[curent_pos - 1]] == g_vars.start_room &&	// if curent_pos == start + 1
 					g_vars.list_room[way->step_index[curent_pos]]->ants_inside == 0 &&
 					g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside > 0) {
 				// print_debug("2\n");
 				g_vars.list_room[way->step_index[curent_pos]]->ant_name
-				= g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside;
-				temp = ft_itoa(g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside);
+				= (g_vars.ant_number
+					- g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside
+					+ 1);
+				temp = ft_itoa(g_vars.ant_number
+						- g_vars.list_room[way->step_index[curent_pos - 1]]->ants_inside
+						+ 1);
 				ft_write_step(temp,
 								g_vars.list_room[way->step_index[curent_pos]]->name);
 				free(temp);
@@ -86,7 +94,6 @@ int		ft_print_result(void){
 		goto error;
 
 	while(ant_end != g_vars.ant_number){
-	// for(int f = 0; f < 5; f++){
 		t_fin_ways *temp = g_fin_ways;
 		while (temp){
 			ft_reverse_iteration(temp);
