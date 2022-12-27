@@ -103,7 +103,17 @@ char			*g_cur_rooms;
 
 static int		ft_exit(void){
 	print_debug("ft_exit start\n");
-	unsigned int	i = 1;
+	unsigned int	i = (g_vars.number_of_rooms != 0
+						&& g_vars.start_room != NULL
+						&& g_vars.list_room != NULL
+						&& g_vars.list_room[0]
+						== g_vars.start_room)
+						? 1 : 0;
+	unsigned int	limit = (g_vars.number_of_rooms
+							 - ((g_vars.number_of_rooms == 0)
+								? 0 : ((g_vars.end_room != NULL
+					 	 		&& g_vars.list_room[g_vars.number_of_rooms - 1]
+					  			== g_vars.end_room) ? 1 : 0)));
 
 	if (g_vars.err_msg != NULL) {
 		write(1, g_vars.err_msg, ft_strlen(g_vars.err_msg));
@@ -111,11 +121,14 @@ static int		ft_exit(void){
 		free(g_vars.err_msg);
 	}
 
-	print_debug("ft_exit start clean list rooms. room numbers = %d\n", g_vars.number_of_rooms);
-	while(i < (g_vars.number_of_rooms - ((g_vars.number_of_rooms == 0) ? 0 : 1))){
+	print_debug("ft_exit start clean list rooms. room numbers = %d\n",
+				g_vars.number_of_rooms);
+	while(i < limit){
+		// print_debug ("%d\n", i);
 		if(g_vars.list_room[i]->number_of_conn != 0){
-			for(unsigned int m = 0; m < g_vars.list_room[i]->number_of_conn; m++){
-				free(g_vars.list_room[i]->connections[m]);
+			for(unsigned int m = 0;
+				m < g_vars.list_room[i]->number_of_conn; m++){
+					free(g_vars.list_room[i]->connections[m]);
 			}
 			free(g_vars.list_room[i]->connections);
 			free(g_vars.list_room[i]->conn_pointers);
@@ -164,8 +177,10 @@ int				main(void){
 	print_debug("Main start\n");
 	
 	while((ret = get_next_line(0, &buf)) > 0) {
-		if (ft_parser(buf))
+		if (ft_parser(buf)){
+			free(buf);
 			goto error;								// Free memory for error in ft_parser
+		}
 		free(buf);
 	}
 	if (ret == 0){
@@ -192,6 +207,6 @@ int				main(void){
 	print_debug("Main finish success\n");
 	return ft_exit();
 error:
-	print_debug("Main finish with error\n");
+	print_debug("Main finish with ERROR\n");
 	return ft_exit();
 }
