@@ -30,28 +30,6 @@ void ft_print_matrix(char **matrix)
     ft_putstr_fd("\n",1);
 }
 
-// void print_rooms(int conn)
-// {
-//     for (int i = 0; i < (int)g_vars.number_of_rooms; i++)
-//     {
-//         ft_putstr_fd("************************************\ncurrent room index: %d, room name: %s \n", g_vars.list_room[i]->index, g_vars.list_room[i]->name);
-//         if (conn)
-//         {
-//             ft_putstr_fd("conn_pointers:\n");
-//             for (int j = 0; j < (int)g_vars.list_room[i]->number_of_conn; j++)
-//             {
-//                 ft_putstr_fd("i: %d, room index: %d, room name: %s \n", i, g_vars.list_room[i]->conn_pointers[j]->index, g_vars.list_room[i]->conn_pointers[j]->name);
-//             }
-//         }
-//     }
-//     ft_putstr_fd("\n",1);
-// }
-
-void color_print()
-{
-
-}
-
 void ft_print_ways(t_fin_ways **g_fin_ways)
 {
 	ft_putstr_fd("\033[1;34mnomber of ways:\033[0m",1);
@@ -74,4 +52,3 @@ void ft_print_ways(t_fin_ways **g_fin_ways)
 	}
     ft_putstr_fd("\n",1);
 }
-

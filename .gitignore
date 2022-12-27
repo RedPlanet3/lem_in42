@@ -54,3 +54,5 @@ dkms.conf
 libft 2
 lem-in
 
+Result/
+output_difference.txt

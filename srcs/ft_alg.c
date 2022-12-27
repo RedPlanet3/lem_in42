@@ -1,9 +1,5 @@
 #include "../includes/lem_in.h"
 
-int count;
-
-// Проверка на использованные кормнаты в пути и на возврат в старт
-// 0 - связь использовать нельзя
 int check_connection(int dest) 
 {
     if(dest == 0)
@@ -83,14 +79,14 @@ void rollback(int prew, int room)
 
 int room_check(int prew, int room)
 {
-    if (check_connection(room))           // проверяем, можем ли мы использовать эту связь
+    if (check_connection(room))          
     {
         g_cur_rooms[room] = '+';
         if (g_sm_matrix[prew][room] == '-')
             full_matrix(prew, room, ' ', ' ');
         else if (g_sm_matrix[prew][room] == ' ')
             full_matrix(prew, room, '+', '-');
-        return(full_current_step(prew, room));     //может возвращать
+        return(full_current_step(prew, room));    
     }
     return -3;
 }
@@ -113,7 +109,7 @@ int find_minus(int prew, int room)
         ch = find_ch(room, ch + 1, '-');
     }
     rollback(prew, room);
-    return -2; // не найдена следующая комната
+    return -2; 
 }
 
 int full_current_step(int prew, int room)
@@ -130,10 +126,10 @@ int full_current_step(int prew, int room)
         if (room != (int)g_vars.number_of_rooms - 1)
         {   
             g_cur_rooms[g_vars.number_of_rooms - 1] = '+';
-            full_matrix(room, g_vars.number_of_rooms - 1, '+', ' '); //в матрице отображаем наш ход
+            full_matrix(room, g_vars.number_of_rooms - 1, '+', ' '); 
         }
-        g_vars.number_of_ways++; //увеличиваю поличество путей
-        return -1; //код завершения
+        g_vars.number_of_ways++; 
+        return -1; 
     }
     
     if (room != 0 && find_ch(room, 0,'+') != -1)
@@ -197,7 +193,7 @@ void ft_alg()
     for(unsigned int i = 0; i < g_vars.number_of_rooms; i++)
         g_vars.list_room[i]->index = i;
 
-    create_matrix(g_vars.number_of_rooms); // ее потом нужно будет очистить по завершени/ю алгоритма
+    create_matrix(g_vars.number_of_rooms); 
     g_cur_rooms_create(g_vars.number_of_rooms, 1);
     for (unsigned int i = 0; i < g_vars.list_room[0]->number_of_conn; i++)
     {
