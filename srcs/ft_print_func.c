@@ -3,15 +3,20 @@
 void ft_print_matrix(char **matrix)
 {
     ft_putstr_fd("\t", 1);
+    
     for (int i = 0; i < (int)g_vars.number_of_rooms; i++)
     {
+        ft_putstr_fd("\033[33m",1);
         ft_putstr_fd(g_vars.list_room[i]->name,1);
+        ft_putstr_fd("\033[0m",1);
         ft_putstr_fd("\t", 1);
     }
     ft_putstr_fd("\n",1);
     for (int i = 0; i < (int)g_vars.number_of_rooms; i++)
     {
+        ft_putstr_fd("\033[33m",1);
         ft_putstr_fd(g_vars.list_room[i]->name,1);
+        ft_putstr_fd("\033[0m",1);
         ft_putstr_fd("\t", 1);
         for (int j = 0; j < (int)g_vars.number_of_rooms; j++)
         {
