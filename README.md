@@ -50,4 +50,4 @@ Lem_in проект школы 42(21).
 <img width="595" alt="image" src="https://user-images.githubusercontent.com/26433084/209680319-dbd73b8c-cdde-47a1-adcf-69a8b0d4aafc.png">
 
 Клонировать и скомпилировать: вы можете клонировать и скомпилировать программу на своем терминале:
-> git clone https://github.com/RedPlanet3/lem_in42.git && cd lem_in && make
+> git clone https://github.com/RedPlanet3/lem_in42.git && cd lem_in42 && make
