@@ -1,9 +1,9 @@
 /**
  * 		General instructions:
- * +1	The executable file must be named lem-in.
- * +2	You must submit a Makefile. That Makefile needs to compile the project and
+ * 1	The executable file must be named lem-in.
+ * 2	You must submit a Makefile. That Makefile needs to compile the project and
  * 	must contain the usual rules. It can only recompile the program if necessary.
- * +3	If you are clever, you will use your library for your lem-in. Also submit your folder
+ * 3	If you are clever, you will use your library for your lem-in. Also submit your folder
  * 	libft including its own Makefile at the root of your repository. Your Makefile
  * 	will have to compile the library, and then compile your project.
  * +4	Your project must be written in C.
@@ -11,14 +11,14 @@
  * 	in an unexpected manner (Segmentation fault, bus error, double free, etc)
  * 6	Your program cannot have memory leaks.
  * 7	Within your mandatory part you are allowed to use the following functions
- * 		malloc
- * 		free
- * 		read
- * 		write
- * 		strerror
- * 		perror
- * 		exit
- * +8	You are allowed to use other functions to carry out the bonus part as long as their
+ * 			malloc
+ * 			free
+ * 			read
+ * 			write
+ * 			strerror
+ * 			perror
+ * 			exit
+ * 8	You are allowed to use other functions to carry out the bonus part as long as their
  * 	use is justified during your defence.
  * 
  * 		Mandatory part
@@ -44,37 +44,6 @@
  * 		Lx-y Lz-w Lr-o ...
  * 	x, z, r represents the ants’ numbers (going from 1 to number_of_ants) and y,
  * 	w, o represents the rooms’ names.
- */
-
-/**
- * Work process
- * +1. Add error handler for ft_atoi (if get not number)
- * +2. Delete rooms without connections
- * +3. Add start and finish to list
- * +4. Add comments in parser
- * +5. Add double connections in rooms handler
- * +6. Handle empty map
- * 7. Handle errors in coordinates
- * +8. Handle zero ants error
- * +9. Handle negative number ats
- * +10. Handle no end/start room errors
- * 11. Handle no rooms and no connections errors
- * +12. Handle start comment after end and vice versa
- * 
- * RULES
- * А)
- * 1. Найти все непересекающиеся пути
- * 2. Пустить по ним поровну
- * Б)
- * 1. Найти все непересекающиеся пути
- * 2. Добавить зависимость от веса пути (3 пути 3/3/9 и 15 муравьев)
- * В)
- * 1. Найти оптимальные пути (не самые короткие)
- * 2. Выбор оптимального сочетания путей в зависимости от количества муравьев и весов путей
- * 
- * Поиск путей:
- * 1) Найти все пути и выбрать из них короткий, непересекажищийся и т.д.
- * 2) Найти первый попавшийся и остальные только если они не пересекаются с ним.
  */
 
 #include "../includes/lem_in.h"
@@ -202,9 +171,6 @@ int				main(int ac, char **av){
 	ft_alg();
 	if (g_vars.visio)
 		ft_print_ways(&g_fin_ways);
-
-	// if (fend_rooms_flagt_create_ways_table())
-	// 	goto exit;
 
 	if(ft_print_result())
 		goto error;

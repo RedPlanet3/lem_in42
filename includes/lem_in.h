@@ -3,8 +3,7 @@
 
 # include "../libft/libft.h"
 
-
-// # define DEBUG
+// # define DEBUG 							// Uncommmit for print logs
 # define SUCCESS		0
 # define ERROR			1
 # define BUFF_SIZE		1024
@@ -33,7 +32,7 @@ typedef struct 			s_room {
 	char				**connections;		// Names of rooms for connections
 	struct s_room		**conn_pointers;	// Connect-pointer with connect-room
 	unsigned int		number_of_conn;		// Number of connections
-	int					index;
+	int					index;				// Index room in g_vars.list_room
 	unsigned int		ants_inside;		// Number of ants inside
 	unsigned int		ant_name;			// The name of the ant that this inside
 }						t_room;
@@ -58,20 +57,19 @@ typedef struct 			s_vars {
 	unsigned int		number_of_rooms;	// Number of rooms
 	t_way				**list_ways;		// List ways piinter
 	unsigned int		number_of_ways;		// Number of ways
-	int					visio;				//	visualisation
+	int					visio;				// Visualisation
 }						t_vars;
 
 
 
 extern t_vars			g_vars;				// Global struct of variables
-extern t_fin_ways 		*g_fin_ways;		//структура содержащая финальные пути
-extern t_step 			*g_steps;			//структура путей для алгоритма
-extern char 			**g_sm_matrix;		//матрица смежности
-extern char*			g_cur_rooms;
+extern t_fin_ways 		*g_fin_ways;		// Final ways struct
+extern t_step 			*g_steps;			// Ways struct for algorithm
+extern char 			**g_sm_matrix;		// Adjacency matrix
+extern char*			g_cur_rooms;		// Temp variable
 
 int				ft_print_result(void);
 int				ft_delete_empty_rooms(void);
-int				ft_create_ways_table(void);
 int				ft_parser(char *str);
 int				main(int ac, char **av);
 int 			check_connection(int dest);
